@@ -3,6 +3,7 @@ package com.globant.corp.kgi.controller;
 import com.globant.corp.kgi.model.Cosa;
 import com.globant.corp.kgi.service.CosaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,17 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class CosaController {
     
     @Autowired
-    CosaService cs;
+    CosaService service;
     
     @RequestMapping("/all")
     public Iterable<Cosa> getCosa(){
-        return cs.getAll();
+        return service.getAll();
     }
     
-    @RequestMapping("/put")
-    public String setCosa(){
-        cs.setCosa(new Cosa("hola", "mundo"));
-        
-        return "ok";
+    @RequestMapping("/put/{description}/{foo}")
+    public Iterable<Cosa> setCosa(@PathVariable String description,@PathVariable String foo){
+        service.setCosa(new Cosa(description, foo));
+        return service.getAll();
     }
 }
