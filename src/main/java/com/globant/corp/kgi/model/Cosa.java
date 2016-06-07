@@ -2,7 +2,6 @@ package com.globant.corp.kgi.model;
 
 import javax.persistence.*;
 import org.springframework.stereotype.Component;
-
 /**
  *
  * @author ramiro.acoglanis
@@ -47,6 +46,4 @@ public class Cosa {
     public void setFoo(String foo) {
         this.foo = foo;
     }
-     
-     
 }
