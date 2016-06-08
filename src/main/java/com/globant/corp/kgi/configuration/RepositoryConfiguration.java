@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Configuration
 @EnableAutoConfiguration
-@EntityScan(basePackages = {"com.globant.corp.kgi.model"})
+@EntityScan(basePackages = {"com.globant.corp.kgi.model.beans"})
 @EnableJpaRepositories(basePackages = {"com.globant.corp.kgi.repository"})
 @EnableTransactionManagement
 public class RepositoryConfiguration {}

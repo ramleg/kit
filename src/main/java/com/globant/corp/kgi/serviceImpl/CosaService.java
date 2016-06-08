@@ -1,6 +1,6 @@
-package com.globant.corp.kgi.service;
+package com.globant.corp.kgi.serviceImpl;
 
-import com.globant.corp.kgi.model.Cosa;
+import com.globant.corp.kgi.model.beans.Cosa;
 import com.globant.corp.kgi.repository.CosaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

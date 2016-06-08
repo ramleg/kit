@@ -1,7 +1,7 @@
 package com.globant.corp.kgi.controller;
 
-import com.globant.corp.kgi.model.Cosa;
-import com.globant.corp.kgi.service.CosaService;
+import com.globant.corp.kgi.model.beans.Cosa;
+import com.globant.corp.kgi.serviceImpl.CosaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

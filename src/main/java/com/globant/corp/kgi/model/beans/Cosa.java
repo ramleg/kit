@@ -1,4 +1,4 @@
-package com.globant.corp.kgi.model;
+package com.globant.corp.kgi.model.beans;
 
 import javax.persistence.*;
 import org.springframework.stereotype.Component;

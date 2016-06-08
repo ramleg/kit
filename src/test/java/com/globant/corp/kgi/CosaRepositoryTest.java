@@ -1,7 +1,6 @@
 package com.globant.corp.kgi;
 
 import com.globant.corp.kgi.repository.CosaRepository;
-import com.globant.corp.kgi.model.*;
 import com.globant.corp.kgi.configuration.*;
 
 import org.junit.Test;

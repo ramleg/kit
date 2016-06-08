@@ -1,4 +1,4 @@
-package com.globant.corp.kgi.model;
+package com.globant.corp.kgi.model.beans;
 
 import java.util.ArrayList;
 import javax.mail.Address;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * @author ramiro.acoglanis
  */
 @Component
-public class Email {
+public class KaceEmail {
     
     private ArrayList<String> from;
     private String to;
@@ -17,7 +17,7 @@ public class Email {
     private String content;
     private String sendDate;
     
-    public Email() {
+    public KaceEmail() {
     }
 
     public ArrayList<String> getFrom() {
