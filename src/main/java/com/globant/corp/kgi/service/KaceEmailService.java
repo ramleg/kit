@@ -11,4 +11,5 @@ public interface KaceEmailService {
     public ArrayList<KaceEmail> getNewOnes();
     public ArrayList<KaceEmail> getAll();
     public KaceEmail getOne();
+    public void sendApproval();
 }

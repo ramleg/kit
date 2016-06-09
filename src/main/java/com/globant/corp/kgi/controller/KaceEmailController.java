@@ -28,4 +28,9 @@ public class KaceEmailController {
     public ArrayList<KaceEmail> readAll(){
         return service.getAll();
     }
+    @RequestMapping("/send")
+    public String send(){
+        service.sendApproval();
+        return "email sended";
+    }
 }
