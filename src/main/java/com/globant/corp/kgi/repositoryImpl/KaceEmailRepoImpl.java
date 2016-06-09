@@ -20,10 +20,9 @@ public class KaceEmailRepoImpl implements KaceEmailRepo{
         Folder inbox = new KaceEmailConfiguration().getInbox(folder, Folder.READ_ONLY);
         ArrayList<KaceEmail> EmailList = new ArrayList<>();
         try {
-            
             int count = inbox.getMessageCount();
             
-            for (int i = 1; i == count; i++){
+            for (int i = 1; i <= count; i++){
                 
                 KaceEmail kaceEmail = new KaceEmail();
                 Message msg = inbox.getMessage(i);
