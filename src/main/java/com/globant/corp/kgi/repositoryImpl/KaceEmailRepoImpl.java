@@ -1,5 +1,6 @@
 package com.globant.corp.kgi.repositoryImpl;
 
+import com.globant.corp.kgi.exception.KaceEmailException;
 import com.globant.corp.kgi.model.beans.KaceEmail;
 import com.globant.corp.kgi.model.beans.KaceTicket;
 import com.globant.corp.kgi.repository.KaceEmailRepo;
@@ -21,92 +22,161 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class KaceEmailRepoImpl implements KaceEmailRepo{
 
-    @Value("${kgi.email.settings.imap-host}")
-    private String imapHost;
-    @Value("${kgi.email.settings.smtp-host}")
-    private String smtpHost;
-    @Value("${kgi.email.settings.smtp-port}")
-    private String smtpPort;
+    @Value("${kgi.email.settings.protocol}")
+    private String protocol;
+    @Value("${kgi.email.settings.read-host}")
+    private String readHost;
+    @Value("${kgi.email.settings.send-host}")
+    private String sendHost;
+    @Value("${kgi.email.settings.port}")
+    private String port;
     @Value("${kgi.email.settings.emailaccount}")
     private String emailAccount;
     @Value("${kgi.email.settings.emailpasswd}")
     private String emailPasswd;
     @Value("${kgi.email.settings.emailto}")
     private String emailTo;
+    @Value("${kgi.email.settings.folder}")
+    private String inboxFolder;
+    
+    private Folder folder;
+    private UIDFolder ufolder;
+    private Store store;
     
     @Override
-    public ArrayList<KaceEmail> getAll(String folder){
+    public ArrayList<KaceEmail> getAll(){
         
-        Folder inbox = this.getInbox(folder, Folder.READ_ONLY);
-        ArrayList<KaceEmail> EmailList = new ArrayList<>();
+        
         try {
-            int count = inbox.getMessageCount();
+            folder = this.getFolder(inboxFolder, Folder.READ_WRITE);
+            ufolder = (UIDFolder)folder;
             
-            for (int i = 1; i <= count; i++){
-                
-                KaceEmail kaceEmail = new KaceEmail();
-                Message msg = inbox.getMessage(i);
-                Address[] fromArray = msg.getFrom();
-                ArrayList<String> fromList = new ArrayList<>();
-                for (Address address : fromArray) {
-                    fromList.add(address.toString());
-                }
-                kaceEmail.setFrom(fromList);
-                Multipart mp = (Multipart) msg.getContent();
-                BodyPart bp = mp.getBodyPart(0);
-                kaceEmail.setSubject(msg.getSubject());
-                kaceEmail.setSendDate(msg.getSentDate().toString());
-                kaceEmail.setContent(bp.getContent().toString());
-                EmailList.add(kaceEmail);
+            // Attributes & Flags for ALL messages ..
+            Message[] msgs = ufolder.getMessagesByUID(1, UIDFolder.LASTUID);
+            // Use a suitable FetchProfile
+            FetchProfile fp = new FetchProfile();
+            fp.add(FetchProfile.Item.ENVELOPE);
+            fp.add(FetchProfile.Item.FLAGS);
+            folder.fetch(msgs, fp);
+            
+            ArrayList<KaceEmail> emailList = new ArrayList<>();
+            
+            for (Message msg : msgs) {
+                emailList.add(getKaceEmail(msg));
             }
-            return EmailList;
-        } catch (MessagingException | IOException ex) {
+            
+            folder.close(false);
+            store.close();
+            
+            return emailList;
+            
+        } catch (MessagingException | IOException | KaceEmailException ex) {
+            Logger.getLogger(KaceEmailRepoImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
-        }
+        } 
+
     }
     
-    private Folder getInbox(String folder, int access){
-        try {
-            Folder inbox;
-            Store store;
-            Properties prop = new Properties();
-            prop.setProperty("mail.store.protocol", "imaps");
-            Session session = Session.getInstance(prop, null);
-            store = session.getStore();
-            store.connect(imapHost, emailAccount, emailPasswd);
-            inbox = store.getFolder(folder);
-            int count = inbox.getMessageCount();
-            inbox.open(access);//Folder.READ_ONLY = 1 // Folder.READ_WRITE = 2
-            return inbox;
-        } catch (NoSuchProviderException ex) {
-            Logger.getLogger(KaceEmailRepoImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        } catch (MessagingException ex) {
-            Logger.getLogger(KaceEmailRepoImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+    private Folder getFolder(String inboxFolder, int folderAccessRights) throws NoSuchProviderException, MessagingException, KaceEmailException{
+        
+        String url = null;
+        // Get a Properties object
+        Properties props = System.getProperties();
+
+        // Get a Session object
+        Session session = Session.getInstance(props, null);
+
+        // Get a Store object
+        store = null;
+        if (url != null) {
+         URLName urln = new URLName(url);
+         store = session.getStore(urln);
+         store.connect();
+        } else {
+         if (protocol != null)
+          store = session.getStore(protocol);
+         else
+          store = session.getStore();
+
+         // Connect
+         if (readHost != null || emailAccount != null || emailPasswd != null)
+          store.connect(readHost, emailAccount, emailPasswd);
+         else
+          store.connect();
         }
+        
+        // Open the Folder
+        Folder folder = store.getDefaultFolder();
+        if (folder == null) {
+            throw new KaceEmailException("No default folder");
+        }
+
+        folder = folder.getFolder(inboxFolder);
+        if (!folder.exists()) {
+            throw new KaceEmailException("Folder: " + inboxFolder + ",  does not exist");
+        }
+
+        if (!(folder instanceof UIDFolder)) {
+            throw new KaceEmailException("This Provider or this folder does not support UIDs");
+        }
+        
+        folder.open(folderAccessRights);
+        int totalMessages = folder.getMessageCount();
+
+        if (totalMessages == 0) {
+            folder.close(false);
+            store.close();
+            throw new KaceEmailException("Empty folder: " + inboxFolder);
+        }
+        
+        return folder;
+
+    }
+    
+    private KaceEmail getKaceEmail(Message msg) throws MessagingException, IOException{
+        
+        KaceEmail kaceEmail = new KaceEmail();
+        kaceEmail.setUid(ufolder.getUID(msg));
+        kaceEmail.setFrom(msg.getFrom());
+        kaceEmail.setTo(msg.getRecipients(Message.RecipientType.TO));
+        kaceEmail.setSubject(msg.getSubject());
+        kaceEmail.setSendDate(msg.getSentDate());
+        Multipart mp = (Multipart) msg.getContent();
+        BodyPart bp = mp.getBodyPart(0);
+        kaceEmail.setContent((String) bp.getContent());
+        
+        return kaceEmail;
     }
     
     @Override
-    public KaceEmail getOne(String folder){
+    public KaceEmail getOne(){
+        
+        
+        try {
+            UIDFolder UIDfolder = (UIDFolder) this.getFolder(inboxFolder, 1);
+            UIDfolder.getMessagesByUID(2 + 1, UIDFolder.LASTUID);
+        } catch (MessagingException | KaceEmailException ex) {
+            Logger.getLogger(KaceEmailRepoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         return null;
     }
 
     @Override
-    public ArrayList<KaceEmail> getFromCount(String folder, int count) {
+    public ArrayList<KaceEmail> getFromCount(int count) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void SendAproval(KaceTicket ticket) {
+    public String SendAproval(KaceTicket ticket) {
         Properties props = new Properties();
         props.put("mail.smtp.user", emailAccount);
-        props.put("mail.smtp.host", smtpHost);
-        props.put("mail.smtp.port", smtpPort);
+        props.put("mail.smtp.host", sendHost);
+        props.put("mail.smtp.port", sendHost);
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.auth", "true");
         //props.put("mail.smtp.debug", "true");
-        props.put("mail.smtp.socketFactory.port", smtpPort);
+        props.put("mail.smtp.socketFactory.port", port);
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.socketFactory.fallback", "false");
         try {
@@ -118,8 +188,9 @@ public class KaceEmailRepoImpl implements KaceEmailRepo{
             msg.setFrom(new InternetAddress(emailAccount));
             msg.addRecipient(Message.RecipientType.TO, new InternetAddress(emailTo));
             Transport.send(msg);
-        } catch (Exception mex) {
-            mex.printStackTrace();
+            return "ok";
+        } catch (Exception ex) {
+            return ex.toString();
         }
     }
     

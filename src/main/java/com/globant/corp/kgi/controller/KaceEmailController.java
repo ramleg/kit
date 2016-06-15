@@ -30,7 +30,6 @@ public class KaceEmailController {
     }
     @RequestMapping("/send")
     public String send(){
-        service.sendApproval();
-        return "email sended";
+        return service.sendApproval();
     }
 }

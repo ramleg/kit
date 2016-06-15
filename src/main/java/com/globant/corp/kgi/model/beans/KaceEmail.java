@@ -1,6 +1,7 @@
 package com.globant.corp.kgi.model.beans;
 
 import java.util.ArrayList;
+import java.util.Date;
 import javax.mail.Address;
 import org.springframework.stereotype.Component;
 
@@ -11,28 +12,29 @@ import org.springframework.stereotype.Component;
 @Component
 public class KaceEmail {
     
-    private ArrayList<String> from;
-    private String to;
+    private long uid;
+    private Address[] from;
+    private Address[] to;
     private String subject;
     private String content;
-    private String sendDate;
+    private Date sendDate;
     
     public KaceEmail() {
     }
 
-    public ArrayList<String> getFrom() {
+    public Address[] getFrom() {
         return from;
     }
 
-    public void setFrom(ArrayList<String> from) {
+    public void setFrom(Address[] from) {
         this.from = from;
     }
 
-    public String getTo() {
+    public Address[] getTo() {
         return to;
     }
 
-    public void setTo(String to) {
+    public void setTo(Address[] to) {
         this.to = to;
     }
 
@@ -52,12 +54,20 @@ public class KaceEmail {
         this.content = content;
     }
 
-    public String getSendDate() {
+    public Date getSendDate() {
         return sendDate;
     }
 
-    public void setSendDate(String sendDate) {
+    public void setSendDate(Date sendDate) {
         this.sendDate = sendDate;
+    }
+
+    public long getUid() {
+        return uid;
+    }
+
+    public void setUid(long uid) {
+        this.uid = uid;
     }
     
     

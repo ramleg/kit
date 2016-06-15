@@ -10,8 +10,8 @@ import java.util.ArrayList;
  */
 public interface KaceEmailRepo {
     
-    public ArrayList<KaceEmail> getFromCount(String folder, int count);
-    public ArrayList<KaceEmail> getAll(String folder);
-    public KaceEmail getOne(String folder);
-    public void SendAproval(KaceTicket ticket);
+    public ArrayList<KaceEmail> getFromCount(int count);
+    public ArrayList<KaceEmail> getAll();
+    public KaceEmail getOne();
+    public String SendAproval(KaceTicket ticket);
 }

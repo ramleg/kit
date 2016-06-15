@@ -26,16 +26,16 @@ public class KaceEmailServiceImpl implements KaceEmailService{
 
     @Override
     public ArrayList<KaceEmail> getAll() {
-        return repo.getAll("TICKETS");
+        return repo.getAll();
     }
 
     @Override
     public KaceEmail getOne() {
-        return repo.getOne("TICKETS");
+        return repo.getOne();
     }
 
     @Override
-    public void sendApproval() {
-        repo.SendAproval(new KaceTicket());
+    public String sendApproval() {
+        return repo.SendAproval(new KaceTicket());
     }
 }
