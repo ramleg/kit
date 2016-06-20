@@ -2,38 +2,55 @@ package com.globant.corp.kit.model.beans;
 
 import java.util.Date;
 import javax.mail.Address;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import org.springframework.stereotype.Component;
 
 /**
  *
  * @author ramiro.acoglanis
  */
-@Component
+@Entity(name="kace_email")
 public class KaceEmail {
     
-    private long uid;
-    private Address[] from;
-    private Address[] to;
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Integer id = 0;
+    private Long uid;
+    @Column(name = "from_address")
+    private String from;
+    @Column(name = "to_address")
+    private String to;
     private String subject;
     private String content;
+    @Column(name = "send_date")
     private Date sendDate;
     
     public KaceEmail() {
     }
 
-    public Address[] getFrom() {
+    public long getId() {
+        return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    public String getFrom() {
         return from;
     }
 
-    public void setFrom(Address[] from) {
+    public void setFrom(String from) {
         this.from = from;
     }
 
-    public Address[] getTo() {
+    public String getTo() {
         return to;
     }
 
-    public void setTo(Address[] to) {
+    public void setTo(String to) {
         this.to = to;
     }
 
@@ -65,7 +82,7 @@ public class KaceEmail {
         return uid;
     }
 
-    public void setUid(long uid) {
+    public void setUid(Long uid) {
         this.uid = uid;
     }
     

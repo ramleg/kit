@@ -37,7 +37,19 @@ public class EmailServiceImpl implements EmailService{
     
     @Override
     public KaceEmail getOne(){
-        return null;
+        try {
+            this.setFolder(config.getReadFolder(), Folder.READ_ONLY);
+            // Attributes & Flags for ALL messages ..
+            Message msg = folder.getMessage(1);
+            KaceEmail kaceEmail = getKaceEmail(msg);
+            folder.close(false);
+            store.close();
+            return kaceEmail;
+            
+        } catch (MessagingException | IOException | EmailException ex) {
+            Logger.getLogger(EmailServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } 
     }
 
     @Override
@@ -159,8 +171,11 @@ public class EmailServiceImpl implements EmailService{
 
         KaceEmail kaceEmail = new KaceEmail();
         kaceEmail.setUid(ufolder.getUID(msg));
-        kaceEmail.setFrom(msg.getFrom());
-        kaceEmail.setTo(msg.getRecipients(Message.RecipientType.TO));
+        Address[] from = msg.getFrom();
+        String email = from == null ? null : ((InternetAddress) from[0]).getAddress();
+        kaceEmail.setFrom(email);
+        Address[] to = msg.getRecipients(Message.RecipientType.TO);
+        kaceEmail.setTo(to[0].toString());
         kaceEmail.setSubject(msg.getSubject());
         kaceEmail.setSendDate(msg.getSentDate());
         Multipart mp = (Multipart) msg.getContent();

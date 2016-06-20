@@ -5,10 +5,11 @@
  */
 package com.globant.corp.kit.repository;
 
+import com.globant.corp.kit.model.beans.KaceEmail;
+import org.springframework.data.repository.CrudRepository;
+
 /**
  *
  * @author ramiro.acoglanis
  */
-public interface KaceEmailRepository {
-    
-}
+public interface KaceEmailRepository extends CrudRepository<KaceEmail, Integer>{}
