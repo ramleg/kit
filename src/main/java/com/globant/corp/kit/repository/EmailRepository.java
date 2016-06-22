@@ -1,17 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.globant.corp.kit.repository;
 import com.globant.corp.kit.model.beans.Email;
 import java.util.List;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 
 /**
  *
  * @author ramiro.acoglanis
  */
-public interface EmailRepo extends CrudRepository<Email, Integer>{
+public interface EmailRepository extends CrudRepository<Email, Integer>, EmailRepositoryCustom{
+    List<Email> findAll(Sort sort);
     List<Email> findByContent(String content);
+    List<Email> findByProcessed(boolean processed, Sort sort);
+    
 }

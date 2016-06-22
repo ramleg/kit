@@ -16,6 +16,7 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.globant.corp.kit.service.InboxService;
+import java.util.List;
 /**
  *
  * @author ramiro.acoglanis
@@ -31,12 +32,12 @@ public class InboxServiceImpl implements InboxService{
     private Store store;
 
     @Override
-    public ArrayList<Email> getAll(){
+    public List<Email> getAll(){
         return getEmails(1);
     }
     
     @Override
-    public Email getOne(){
+    public Email getLast(){
         try {
             this.setFolder(config.getReadFolder(), Folder.READ_ONLY);
             // Attributes & Flags for ALL messages ..
@@ -53,7 +54,7 @@ public class InboxServiceImpl implements InboxService{
     }
 
     @Override
-    public ArrayList<Email> getUnread(int lastRead) {
+    public List<Email> getUnread(long lastRead) {
         return getEmails(lastRead);
     }
 
@@ -83,11 +84,12 @@ public class InboxServiceImpl implements InboxService{
             return "something went wrong!!";
         }
     }
-    
-    private ArrayList<Email> getEmails(int getFrom){
+        
+    private List<Email> getEmails(long getFrom){
         try {
             this.setFolder(config.getReadFolder(), Folder.READ_ONLY);
             // Attributes & Flags for ALL messages ..
+            
             Message[] msgs = ufolder.getMessagesByUID(getFrom, UIDFolder.LASTUID);
             // Use a suitable FetchProfile
             FetchProfile fp = new FetchProfile();

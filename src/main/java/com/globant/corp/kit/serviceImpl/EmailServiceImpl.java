@@ -4,8 +4,8 @@ import com.globant.corp.kit.model.beans.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.globant.corp.kit.service.EmailService;
-import com.globant.corp.kit.repository.EmailRepo;
 import java.util.List;
+import com.globant.corp.kit.repository.EmailRepository;
 
 /**
  *
@@ -15,7 +15,7 @@ import java.util.List;
 public class EmailServiceImpl implements EmailService{
 
     @Autowired
-    EmailRepo repo;
+    EmailRepository repo;
     
     public List<Email> getByContent(String content){
         return repo.findByContent(content);
