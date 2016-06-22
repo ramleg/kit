@@ -1,20 +1,20 @@
 package com.globant.corp.kit.model.beans;
 
 import java.util.Date;
-import javax.mail.Address;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import org.springframework.stereotype.Component;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
  * @author ramiro.acoglanis
  */
-@Entity(name="kace_email")
-public class KaceEmail {
+@Entity(name="email")
+public class Email {
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -27,9 +27,12 @@ public class KaceEmail {
     private String subject;
     private String content;
     @Column(name = "send_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date sendDate;
+    private Boolean processed = false;
     
-    public KaceEmail() {
+    
+    public Email() {
     }
 
     public long getId() {
@@ -84,6 +87,14 @@ public class KaceEmail {
 
     public void setUid(Long uid) {
         this.uid = uid;
+    }
+
+    public Boolean getProcessed() {
+        return processed;
+    }
+
+    public void setProcessed(Boolean processed) {
+        this.processed = processed;
     }
     
     
