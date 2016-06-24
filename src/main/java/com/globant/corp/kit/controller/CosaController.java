@@ -41,12 +41,13 @@ public class CosaController {
     @RequestMapping("/all")
     public List<Email> getAll(){
         Sort sort = new Sort(Sort.Direction.ASC,"uid");
-        return emailRepo.findByProcessed(false,sort);
+        return emailRepo.findByProcessedOrderByUidDesc(false);
     }
     
     @RequestMapping("/save")
-    public List<Email> saveUnreded(){
-        return processService.saveUnprocessedEmails();
+    public String saveUnreded(){
+        processService.saveUnprocessedEmails();
+        return "ok";
     }
     
     @RequestMapping("/filtro/{filtro}")
@@ -56,7 +57,8 @@ public class CosaController {
     }
     
     @RequestMapping("/test")
-    public List<Email> test(){
-        return emailRepo.someMethod();
+    public String test(){
+        emailRepo.markProcessedEmails();
+        return "ok";
     }
 }

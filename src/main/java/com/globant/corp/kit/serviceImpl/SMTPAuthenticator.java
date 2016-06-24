@@ -1,4 +1,4 @@
-package com.globant.corp.kit.email;
+package com.globant.corp.kit.serviceImpl;
 
 import javax.mail.PasswordAuthentication;
 

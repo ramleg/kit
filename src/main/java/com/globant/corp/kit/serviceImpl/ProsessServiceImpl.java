@@ -1,11 +1,8 @@
 package com.globant.corp.kit.serviceImpl;
 
 import com.globant.corp.kit.model.beans.Email;
+import com.globant.corp.kit.model.beans.KaceTicket;
 import java.util.List;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.internal.SessionFactoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,20 +27,38 @@ public class ProsessServiceImpl implements ProsessService{
     
     @Override
     @Transactional
-    public List<Email> saveUnprocessedEmails (){
+    public void saveUnprocessedEmails (){
         Sort sort = new Sort(Sort.Direction.DESC,"uid");
-        Email lastEmailSaved = emailRepo.findAll(sort).get(0);
-        List<Email> unprocessedEmails = inboxService.getUnread(lastEmailSaved.getUid());
-        unprocessedEmails.remove(0);
-        emailRepo.save(unprocessedEmails);
-        return unprocessedEmails;
+        List<Email> storedEmails = emailRepo.findAll(sort);
+        if(!storedEmails.isEmpty()){
+            Email lastEmailSaved = storedEmails.get(0);
+            List<Email> unprocessedEmails = inboxService.getUnread(lastEmailSaved.getUid());
+            unprocessedEmails.remove(0);
+            emailRepo.save(unprocessedEmails);
+        }else{
+            saveAllEmails();
+        }
     }
 
     @Override
     @Transactional
-    public void processAll() {
+    public void saveAllEmails() {
         emailRepo.deleteAll();
         emailRepo.save(inboxService.getAll());
     }
+    
+    public List<KaceTicket> updateTickets(){
+        List<Email> unprocessedEmails = emailRepo.findByProcessed(false);
+        
+        return null;
+    }
+    
+    public List<KaceTicket> parseEmails(List<Email> unparsedEmails){
+        
+        return null;
+    }
+    
+    
+    
     
 }

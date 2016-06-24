@@ -1,4 +1,4 @@
-package com.globant.corp.kit.email;
+package com.globant.corp.kit.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

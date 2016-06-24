@@ -1,7 +1,6 @@
 package com.globant.corp.kit.serviceImpl;
 
-import com.globant.corp.kit.email.EmailConfiguration;
-import com.globant.corp.kit.email.SMTPAuthenticator;
+import com.globant.corp.kit.configuration.EmailConfiguration;
 import com.globant.corp.kit.exception.EmailException;
 import com.globant.corp.kit.model.beans.Email;
 import com.globant.corp.kit.model.beans.KaceTicket;
