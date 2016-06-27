@@ -3,7 +3,7 @@ package com.globant.corp.kit.serviceImpl;
 import com.globant.corp.kit.configuration.EmailConfiguration;
 import com.globant.corp.kit.exception.EmailException;
 import com.globant.corp.kit.model.beans.Email;
-import com.globant.corp.kit.model.beans.KaceTicket;
+import com.globant.corp.kit.model.beans.Ticket;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -58,7 +58,7 @@ public class InboxServiceImpl implements InboxService{
     }
 
     @Override
-    public String SendAproval(KaceTicket ticket) {
+    public String SendAproval(Ticket ticket) {
         Properties props = new Properties();
         props.put("mail.smtp.user", config.getEmailAccount());
         props.put("mail.smtp.host", config.getSendHost());

@@ -1,7 +1,7 @@
 package com.globant.corp.kit.serviceImpl;
 
 import com.globant.corp.kit.model.beans.Email;
-import com.globant.corp.kit.model.beans.KaceTicket;
+import com.globant.corp.kit.model.beans.Ticket;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,14 +47,12 @@ public class ProsessServiceImpl implements ProsessService{
         emailRepo.save(inboxService.getAll());
     }
     
-    public List<KaceTicket> updateTickets(){
+    public List<Ticket> updateTickets(){
         List<Email> unprocessedEmails = emailRepo.findByProcessed(false);
-        
         return null;
     }
     
-    public List<KaceTicket> parseEmails(List<Email> unparsedEmails){
-        
+    public List<Ticket> parseEmails(List<Email> unparsedEmails){
         return null;
     }
     
