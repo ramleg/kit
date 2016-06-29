@@ -23,11 +23,10 @@ public class Approver {
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer id = 0;
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="fk_ticket")
-    private Ticket ticket;
-    private String user;
+    private Integer id = null;
+    @Column(name="fk_ticket")
+    private Integer ticket;
+    private String approver;
     private String state;
 
     public Integer getId() {
@@ -38,20 +37,20 @@ public class Approver {
         this.id = id;
     }
 
-    public Ticket getTicket() {
+    public Integer getTicket() {
         return ticket;
     }
 
-    public void setTicket(Ticket ticket) {
+    public void setTicket(Integer ticket) {
         this.ticket = ticket;
     }
 
-    public String getUser() {
-        return user;
+    public String getApprover() {
+        return approver;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setApprover(String approver) {
+        this.approver = approver;
     }
 
     public String getState() {

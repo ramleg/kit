@@ -3,12 +3,9 @@ package com.globant.corp.kit.model.beans;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -24,15 +21,14 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer id;
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="fk_ticket")
-    private Ticket ticket;
+    private Integer id = null;
+    @Column(name="fk_ticket")
+    private Integer ticket;
     private String comment;
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
     @Column(name = "owners_only")
-    private boolean ownersOnly;
+    private boolean ownersOnly = false;
     private String who;
 
     public Integer getId() {
@@ -43,11 +39,11 @@ public class Comment {
         this.id = id;
     }
 
-    public Ticket getTicket() {
+    public Integer getTicket() {
         return ticket;
     }
 
-    public void setTicket(Ticket ticket) {
+    public void setTicket(Integer ticket) {
         this.ticket = ticket;
     }
 
@@ -82,6 +78,4 @@ public class Comment {
     public void setWho(String who) {
         this.who = who;
     }
-    
-    
 }

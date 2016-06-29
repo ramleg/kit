@@ -10,6 +10,11 @@ import com.globant.corp.kit.service.InboxService;
 import org.springframework.data.domain.Sort;
 import com.globant.corp.kit.service.ProsessService;
 import com.globant.corp.kit.repository.EmailRepository;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;// para consumir un servicio rest
 
 /**
  *
@@ -55,8 +60,6 @@ public class ProsessServiceImpl implements ProsessService{
     public List<Ticket> parseEmails(List<Email> unparsedEmails){
         return null;
     }
-    
-    
     
     
 }
