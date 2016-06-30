@@ -13,10 +13,15 @@ import com.globant.corp.kit.service.ProsessService;
 import org.springframework.web.bind.annotation.PathVariable;
 import com.globant.corp.kit.repository.EmailRepository;
 import com.globant.corp.kit.repository.TicketRepository;
+import com.globant.corp.kit.service.ParserService;
 import com.globant.corp.kit.service.RestConsumerService;
 import com.globant.corp.kit.service.TicketService;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
@@ -47,6 +52,9 @@ public class CosaController {
     
     @Autowired
     RestConsumerService rcs;
+    
+    @Autowired
+    ParserService parserService;
     
     @RequestMapping("/one")
     public Ticket getOne(){
@@ -101,14 +109,22 @@ public class CosaController {
     }
     
     @RequestMapping(value = "/filtro/{filtro}", method = RequestMethod.GET)
-    public String getFiltered(@PathVariable("filtro") String filtro){
+    public HashMap<String,String> getFiltered(@PathVariable("filtro") String filtro){
         
-        return rcs.postToGata(filtro);
+        try {
+            return parserService.emailToTicket(filtro);
+        } catch (NoSuchMethodException ex) {
+            Logger.getLogger(CosaController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            Logger.getLogger(CosaController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
     
     @RequestMapping(value = "/test/{data}", method = RequestMethod.POST)
     public String test(@PathVariable("data") String data){
         
-        return "putoooo";
+        return "ok";
     }
 }
