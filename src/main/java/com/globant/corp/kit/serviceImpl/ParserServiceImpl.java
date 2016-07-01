@@ -45,19 +45,20 @@ public class ParserServiceImpl  implements ParserService{
             String sc = splitedContent[i];
             
             if(fields.contains(sc)){
-                if(parsedContent.containsKey(sc)){
-                    //exception
-                    System.out.println("Exception");
-                }else{
                     lastFieldRead = sc;
                     parsedContent.put(sc, "");
-                }
-                
+                    
 //                Method method = ticket.getClass().getMethod("set" + WordUtils.capitalize(sc) , String.class);
 //                method.invoke(ticket, sc2);
             }else{
-                String a = parsedContent.get(lastFieldRead) + sc;
-                parsedContent.put(lastFieldRead,a);
+                
+                String value = parsedContent.get(lastFieldRead);
+                if(value.equals("")){
+                    parsedContent.put(lastFieldRead,sc);
+                }else{
+                    parsedContent.put(lastFieldRead,value + delimiter + sc);
+                }
+                
             }
             
             i++;
