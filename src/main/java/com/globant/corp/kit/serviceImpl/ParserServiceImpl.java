@@ -38,27 +38,26 @@ public class ParserServiceImpl  implements ParserService{
         String lastFieldRead = "";
         HashMap<String,String> parsedContent = new HashMap<>();
         int i = 0;
-        int len = splitedContent.length - 1;
+        int len = splitedContent.length;
         
         while(i < len){
             
-            String sc1 = splitedContent[i];
-            String sc2 = null;
-            if(i+1 <= len){
-                i++;
-                sc2 = splitedContent[i];
-            }
-                
+            String sc = splitedContent[i];
             
-            
-            if(fields.contains(sc1)){
-                lastFieldRead = sc1;
-                parsedContent.put(sc1, sc2);
+            if(fields.contains(sc)){
+                if(parsedContent.containsKey(sc)){
+                    //exception
+                    System.out.println("Exception");
+                }else{
+                    lastFieldRead = sc;
+                    parsedContent.put(sc, "");
+                }
                 
-//                Method method = ticket.getClass().getMethod("set" + WordUtils.capitalize(sc1) , String.class);
+//                Method method = ticket.getClass().getMethod("set" + WordUtils.capitalize(sc) , String.class);
 //                method.invoke(ticket, sc2);
             }else{
-                parsedContent.put(lastFieldRead, parsedContent.get(lastFieldRead) + sc1);
+                String a = parsedContent.get(lastFieldRead) + sc;
+                parsedContent.put(lastFieldRead,a);
             }
             
             i++;
