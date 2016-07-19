@@ -1,6 +1,6 @@
-package com.globant.corp.kit.repository;
+package com.globant.corp.kit.repo.kit;
 
-import com.globant.corp.kit.model.beans.Comment;
+import com.globant.corp.kit.entity.kit.Comment;
 import org.springframework.data.repository.CrudRepository;
 
 /**

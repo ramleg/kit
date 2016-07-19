@@ -1,4 +1,4 @@
-package com.globant.corp.kit.model.beans;
+package com.globant.corp.kit.entity.kit;
 
 import java.util.Date;
 import java.util.List;
@@ -14,7 +14,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 /**
  *
  * @author ramiro.acoglanis
@@ -36,7 +35,10 @@ public class Ticket {
     @Column(name = "modif_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifDate;
-    private String submitter;
+    @Column(name = "submitter_name")
+    private String submitterName;
+    @Column(name = "submitter_user")
+    private String submitterUser;
     private String owner;
     private String status;
     private String location;
@@ -46,6 +48,8 @@ public class Ticket {
     private String priority;
     private String project;
     private String url;
+    @Column(name = "sended_to_gata")
+    private boolean sendedToGATA = false;
 //    ---------------------------------
     @OneToMany (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name="fk_ticket", referencedColumnName="id")
@@ -113,13 +117,22 @@ public class Ticket {
         this.modifDate = modifDate;
     }
 
-    public String getSubmitter() {
-        return submitter;
+    public String getSubmitterName() {
+        return submitterName;
     }
 
-    public void setSubmitter(String submitter) {
-        this.submitter = submitter;
+    public void setSubmitterName(String submitterName) {
+        this.submitterName = submitterName;
     }
+
+    public String getSubmitterUser() {
+        return submitterUser;
+    }
+
+    public void setSubmitterUser(String submitterUser) {
+        this.submitterUser = submitterUser;
+    }
+
 
     public String getOwner() {
         return owner;
@@ -205,8 +218,20 @@ public class Ticket {
         return approvers;
     }
 
+    public void addComments(Comment comment){
+        this.comments.add(comment);
+    }
+    
     public void setApprovers(List<Approver> approvers) {
         this.approvers = approvers;
+    }
+
+    public boolean isSendedToGATA() {
+        return sendedToGATA;
+    }
+
+    public void setSendedToGATA(boolean sendedToGATA) {
+        this.sendedToGATA = sendedToGATA;
     }
     
     

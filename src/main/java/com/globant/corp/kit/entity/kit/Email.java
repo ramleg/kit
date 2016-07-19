@@ -1,4 +1,4 @@
-package com.globant.corp.kit.model.beans;
+package com.globant.corp.kit.entity.kit;
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -32,6 +32,7 @@ public class Email {
     @Temporal(TemporalType.TIMESTAMP)
     private Date sendDate;
     private Boolean processed = false;
+    private String action;
     
     
     public Email() {
@@ -97,6 +98,14 @@ public class Email {
 
     public void setProcessed(Boolean processed) {
         this.processed = processed;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
     }
     
     

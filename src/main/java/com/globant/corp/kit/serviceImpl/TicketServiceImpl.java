@@ -1,11 +1,11 @@
 package com.globant.corp.kit.serviceImpl;
 
-import com.globant.corp.kit.model.beans.Approver;
-import com.globant.corp.kit.model.beans.Comment;
-import com.globant.corp.kit.model.beans.Ticket;
-import com.globant.corp.kit.repository.ApproverRepository;
-import com.globant.corp.kit.repository.CommentRepository;
-import com.globant.corp.kit.repository.TicketRepository;
+import com.globant.corp.kit.entity.kit.Approver;
+import com.globant.corp.kit.entity.kit.Comment;
+import com.globant.corp.kit.entity.kit.Ticket;
+import com.globant.corp.kit.repo.kit.ApproverRepository;
+import com.globant.corp.kit.repo.kit.CommentRepository;
+import com.globant.corp.kit.repo.kit.TicketRepository;
 import com.globant.corp.kit.service.TicketService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,21 +20,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class TicketServiceImpl implements TicketService{
 
     @Autowired
-    TicketRepository TicketRepo;
+    TicketRepository ticketRepo;
     @Autowired
-    CommentRepository CommentRepo;
+    CommentRepository commentRepo;
     @Autowired
     ApproverRepository approverRepo;
     
     
     @Override
     public List<Ticket> getAll() {
-        return (List<Ticket>) TicketRepo.findAll();
+        return (List<Ticket>) ticketRepo.findAll();
     }
 
     @Override
     public Ticket getById() {
-        return TicketRepo.findByNum(123123);
+        return ticketRepo.findByNum(123123);
     }
 
     @Override
@@ -44,14 +44,6 @@ public class TicketServiceImpl implements TicketService{
     
     @Override
     public void saveTicket(Ticket ticket) {
-        Iterable<Comment> coments = ticket.getComments();
-        Iterable<Approver> approvers = ticket.getApprovers();
-        
-        ticket.setComments(null);
-        ticket.setApprovers(null);
-        
-        TicketRepo.save(ticket);
-        CommentRepo.save(coments);
-        approverRepo.save(approvers);
+        ticketRepo.save(ticket);
     }
 }

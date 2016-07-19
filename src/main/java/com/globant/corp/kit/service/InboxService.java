@@ -1,7 +1,7 @@
 package com.globant.corp.kit.service;
 
-import com.globant.corp.kit.model.beans.Email;
-import com.globant.corp.kit.model.beans.Ticket;
+import com.globant.corp.kit.entity.kit.Email;
+import com.globant.corp.kit.entity.kit.Ticket;
 import java.util.List;
 
 /**

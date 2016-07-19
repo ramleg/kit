@@ -1,4 +1,4 @@
-package com.globant.corp.kit.model.beans;
+package com.globant.corp.kit.entity.kit;
 
 import java.util.Date;
 import javax.persistence.Column;

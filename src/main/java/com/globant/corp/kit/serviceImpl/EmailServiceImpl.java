@@ -1,16 +1,17 @@
 package com.globant.corp.kit.serviceImpl;
 
-import com.globant.corp.kit.model.beans.Email;
+import com.globant.corp.kit.entity.kit.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.globant.corp.kit.service.EmailService;
 import java.util.List;
-import com.globant.corp.kit.repository.EmailRepository;
+import com.globant.corp.kit.repo.kit.EmailRepository;
 
 /**
  *
  * @author ramiro.acoglanis
  */
+
 @Service
 public class EmailServiceImpl implements EmailService{
 
