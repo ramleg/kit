@@ -1,7 +1,5 @@
 package com.globant.corp.kit.controller;
-import com.globant.corp.kit.entity.kace.KaceTicket;
-import com.globant.corp.kit.entity.kit.Ticket;
-import com.globant.corp.kit.service.KaceTicketService;
+import com.globant.corp.kit.entity.kace.MiniTicket;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMethod;
+import com.globant.corp.kit.service.MiniTicketService;
 
 /**
  *
@@ -20,17 +19,12 @@ public class MainController {
     
     
     @Autowired
-    KaceTicketService kace;
+    MiniTicketService kace;
     
         
     @RequestMapping("/all")
-    public Iterable<KaceTicket> getAll(){
+    public Iterable<MiniTicket> getAll(){
         return kace.getAll();
-    }
-    
-    @RequestMapping("/save")
-    public List<Ticket> saveUnreded(){
-        return null;
     }
     
     @RequestMapping(value = "/filtro/{filtro}", method = RequestMethod.GET)
@@ -40,6 +34,6 @@ public class MainController {
     
     @RequestMapping(value = "/test/{data}", method = RequestMethod.POST)
     public String test(@PathVariable("data") String data){
-        return "ok";
+        return data;
     }
 }

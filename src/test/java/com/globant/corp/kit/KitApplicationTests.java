@@ -1,13 +1,15 @@
 package com.globant.corp.kit;
 
-import com.globant.corp.kit.entity.kace.KaceTicket;
-import com.globant.corp.kit.service.KaceTicketService;
+import com.globant.corp.kit.entity.kace.FullTicket;
+import com.globant.corp.kit.entity.kace.MiniTicket;
+import com.globant.corp.kit.service.FullTicketService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import com.globant.corp.kit.service.MiniTicketService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = KitApplication.class)
@@ -15,20 +17,28 @@ import org.springframework.test.context.web.WebAppConfiguration;
 public class KitApplicationTests {
 
     @Autowired
-    KaceTicketService kace;
+    FullTicketService fullTicketService;
     
-	@Test
+//	@Test
+//	public void contextLoads() {
+//            
+//            Iterable<FullTicket> i = fullTicketService.getAll();
+//            
+//            System.out.println("******----*******----******----*******----******----*******----******----*******----");
+//            for(FullTicket k: i){
+//                System.out.println("*** -> " + k.getId() + " - - - " + k.getTitle() + " - - -   {" + k.getHistoryString() + "}");
+//            }
+//            System.out.println("******----*******----******----*******----******----*******----******----*******----");
+//	}
+        
+        @Test
 	public void contextLoads() {
+            FullTicket ft = fullTicketService.getById(38);
             
-            KaceTicket ticket = new KaceTicket();
-            ticket.setId(5);
-            ticket.setName("chipotito");
-            kace.save(ticket);
-            Iterable<KaceTicket> it = kace.getAll();
+            System.out.println("******----*******----******----*******----******----*******----******----*******----");
+            System.out.println("******----  " + ft.getId() + " -- " + ft.getSummary());
+            System.out.println("******----*******----******----*******----******----*******----******----*******----");
             
-            for(KaceTicket k: it){
-                System.out.println(k.getId() + " - - - " + k.getName());
-            }
 	}
 
 }

@@ -8,6 +8,8 @@ import java.util.List;
  * @author ramiro.acoglanis
  */
 public interface ProsessService {
-    public void saveUnprocessedEmails();
-    public void saveAllEmails();
+    
+    
+    
+    
 }
