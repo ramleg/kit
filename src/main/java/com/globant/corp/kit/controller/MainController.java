@@ -8,6 +8,7 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMethod;
 import com.globant.corp.kit.service.MiniTicketService;
+import com.globant.corp.kit.service.ProcessService;
 
 /**
  *
@@ -21,10 +22,20 @@ public class MainController {
     @Autowired
     MiniTicketService kace;
     
+    @Autowired
+    ProcessService process;
+    
         
     @RequestMapping("/all")
     public Iterable<MiniTicket> getAll(){
         return kace.getAll();
+    }
+    
+    @RequestMapping("/clean")
+    public String clean(){
+        
+        process.rebuildRegistredTickets();
+        return "ok";
     }
     
     @RequestMapping(value = "/filtro/{filtro}", method = RequestMethod.GET)
