@@ -2,7 +2,6 @@ package com.globant.corp.kit.entity.kace;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -83,14 +82,12 @@ public class FullTicket {
         this.history = history;
     }
 
-    public String getHistoryString(){
-        
-        String s = "";
-        for(FullHistory fh : getHistory()){
-            s=fh.getComment();
-        }
-        return s;
+    @Override
+    public String toString(){
+        return null;
     }
+    
+
     
     
 }

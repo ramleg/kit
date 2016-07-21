@@ -4,6 +4,7 @@ package com.globant.corp.kit.serviceImpl;
 import com.globant.corp.kit.entity.local.TicketReg;
 import com.globant.corp.kit.repo.local.TicketRegRepo;
 import com.globant.corp.kit.service.TicketRegService;
+import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,16 @@ public class TicketRegServiceImpl implements TicketRegService{
     @Override
     public void clean() {
         repo.deleteAll();
+    }
+
+    @Override
+    public HashMap<Integer, TicketReg> getAllHashMap() {
+        
+        HashMap<Integer, TicketReg> map = new HashMap<>();
+        for(TicketReg reg : repo.findAll()){
+            map.put(reg.getId(), reg);
+        }
+        return map;
     }
     
 }

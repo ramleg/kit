@@ -7,7 +7,7 @@ package com.globant.corp.kit.service;
  */
 public interface ProcessService {
     
-    public void rebuildRegistredTickets();
-    
+    public String rebuildRegistredTickets();
+    public void systemUpdate();
     
 }

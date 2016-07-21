@@ -1,5 +1,6 @@
 package com.globant.corp.kit.entity.kace;
 
+import com.globant.corp.kit.entity.local.TicketReg;
 import java.util.Date;
 import javax.persistence.*;
 /**
@@ -51,5 +52,15 @@ public class MiniTicket {
         this.approvers = approvers;
     }
     
+    public TicketReg toTicketReg(){
+        
+        TicketReg treg = new TicketReg();
+        treg.setId(getId());
+        treg.setModified(getModified());
+        treg.setAlert("");
+        
+        return treg;
+        
+    }
     
 }

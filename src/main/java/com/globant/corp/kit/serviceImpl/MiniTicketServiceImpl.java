@@ -5,8 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.globant.corp.kit.service.MiniTicketService;
 import com.globant.corp.kit.repo.kace.MiniTicketRepo;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 /**
  *
@@ -26,6 +25,16 @@ public class MiniTicketServiceImpl implements MiniTicketService{
     @Override
     public void save(MiniTicket kace) {
         repo.save(kace);
+    }
+
+    @Override
+    public HashMap<Integer, MiniTicket> getAllHashMap() {
+        
+        HashMap<Integer, MiniTicket> map = new HashMap<>();
+        for(MiniTicket mini : repo.findAll()){
+            map.put(mini.getId(), mini);
+        }
+        return map;
     }
     
 }
