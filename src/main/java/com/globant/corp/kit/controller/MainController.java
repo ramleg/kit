@@ -32,7 +32,6 @@ public class MainController {
     
     @RequestMapping("/clean")
     public String clean(){
-        
         process.rebuildRegistredTickets();
         return "ok";
     }
