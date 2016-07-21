@@ -1,8 +1,8 @@
 
 package com.globant.corp.kit.serviceImpl;
 
-import com.globant.corp.kit.entity.kit.TicketReg;
-import com.globant.corp.kit.repo.kit.TicketRegRepo;
+import com.globant.corp.kit.entity.local.TicketReg;
+import com.globant.corp.kit.repo.local.TicketRegRepo;
 import com.globant.corp.kit.service.TicketRegService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

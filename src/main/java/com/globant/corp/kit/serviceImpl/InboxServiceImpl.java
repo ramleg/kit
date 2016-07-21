@@ -2,7 +2,7 @@ package com.globant.corp.kit.serviceImpl;
 
 import com.globant.corp.kit.configuration.EmailConfiguration;
 import com.globant.corp.kit.exception.EmailException;
-import com.globant.corp.kit.entity.kit.Email;
+import com.globant.corp.kit.entity.local.Email;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;

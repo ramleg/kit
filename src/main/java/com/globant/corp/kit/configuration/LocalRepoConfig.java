@@ -21,33 +21,33 @@ import org.springframework.context.annotation.PropertySource;
  * @author ramiro.acoglanis
  */
 @Configuration
-@EnableJpaRepositories(basePackages = "com.globant.corp.kit.repo.kit", entityManagerFactoryRef = "kitEntityManagerFactory", transactionManagerRef = "kitTransactionManager")
+@EnableJpaRepositories(basePackages = "com.globant.corp.kit.repo.local", entityManagerFactoryRef = "localEntityManagerFactory", transactionManagerRef = "localTransactionManager")
 @EnableTransactionManagement
-@PropertySource("classpath:kit-datasource.properties")
-public class RepoConfigKit
+@PropertySource("classpath:local-datasource.properties")
+public class LocalRepoConfig
 {
   @Bean
-  @ConfigurationProperties(prefix = "kit.datasource")
+  @ConfigurationProperties(prefix = "local.datasource")
   @Primary
-  public DataSource kitDataSource()
+  public DataSource localDataSource()
   {
     return DataSourceBuilder.create().build();
   }
 
   @Bean
   @Primary
-  public LocalContainerEntityManagerFactoryBean kitEntityManagerFactory(final EntityManagerFactoryBuilder builder)
+  public LocalContainerEntityManagerFactoryBean localEntityManagerFactory(final EntityManagerFactoryBuilder builder)
   {
     return builder
-        .dataSource(kitDataSource())
-        .packages("com.globant.corp.kit.entity.kit")
-        .persistenceUnit("kitPersistenceUnit")
+        .dataSource(localDataSource())
+        .packages("com.globant.corp.kit.entity.local")
+        .persistenceUnit("localPersistenceUnit")
         .build();
   }
 
   @Bean
   @Primary
-  public JpaTransactionManager kitTransactionManager(@Qualifier("kitEntityManagerFactory") final EntityManagerFactory factory)
+  public JpaTransactionManager localTransactionManager(@Qualifier("localEntityManagerFactory") final EntityManagerFactory factory)
   {
     return new JpaTransactionManager(factory);
   }

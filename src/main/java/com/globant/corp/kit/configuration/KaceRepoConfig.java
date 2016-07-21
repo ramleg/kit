@@ -27,7 +27,7 @@ import org.springframework.context.annotation.PropertySource;
 @EnableJpaRepositories(basePackages = "com.globant.corp.kit.repo.kace", entityManagerFactoryRef = "kaceEntityManagerFactory", transactionManagerRef = "kaceTransactionManager")
 @EnableTransactionManagement
 @PropertySource("classpath:kace-datasource.properties")
-public class RepoConfigKace
+public class KaceRepoConfig
 {
   @Bean
   @ConfigurationProperties(prefix = "kace.datasource")

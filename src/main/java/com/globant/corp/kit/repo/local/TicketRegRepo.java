@@ -1,6 +1,6 @@
-package com.globant.corp.kit.repo.kit;
+package com.globant.corp.kit.repo.local;
 
-import com.globant.corp.kit.entity.kit.TicketReg;
+import com.globant.corp.kit.entity.local.TicketReg;
 import org.springframework.data.repository.CrudRepository;
 
 /**

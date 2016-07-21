@@ -1,6 +1,6 @@
 package com.globant.corp.kit.service;
 
-import com.globant.corp.kit.entity.kit.Email;
+import com.globant.corp.kit.entity.local.Email;
 import java.util.List;
 
 /**

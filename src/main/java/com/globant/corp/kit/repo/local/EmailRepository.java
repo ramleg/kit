@@ -1,5 +1,5 @@
-package com.globant.corp.kit.repo.kit;
-import com.globant.corp.kit.entity.kit.Email;
+package com.globant.corp.kit.repo.local;
+import com.globant.corp.kit.entity.local.Email;
 import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;

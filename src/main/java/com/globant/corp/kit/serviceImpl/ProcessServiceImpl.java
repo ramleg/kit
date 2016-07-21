@@ -1,12 +1,12 @@
 package com.globant.corp.kit.serviceImpl;
 
 import com.globant.corp.kit.entity.kace.MiniTicket;
-import com.globant.corp.kit.entity.kit.TicketReg;
+import com.globant.corp.kit.entity.local.TicketReg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.globant.corp.kit.service.InboxService;
-import com.globant.corp.kit.repo.kit.EmailRepository;
+import com.globant.corp.kit.repo.local.EmailRepository;
 import com.globant.corp.kit.service.MiniTicketService;
 import com.globant.corp.kit.service.TicketRegService;
 import java.util.ArrayList;

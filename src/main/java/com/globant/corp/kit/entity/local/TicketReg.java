@@ -1,4 +1,4 @@
-package com.globant.corp.kit.entity.kit;
+package com.globant.corp.kit.entity.local;
 
 import java.util.Date;
 import javax.persistence.Entity;
