@@ -1,5 +1,6 @@
 package com.globant.corp.kit.controller;
 import com.globant.corp.kit.entity.kace.MiniTicket;
+import com.globant.corp.kit.service.InboxService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,10 +25,17 @@ public class MainController {
     @Autowired
     ProcessService process;
     
+    @Autowired
+    InboxService inbox;
         
     @RequestMapping("/all")
-    public Iterable<MiniTicket> getAll(){
-        return kace.getAll();
+    public String getAll(){
+        return "all";
+    }
+    
+    @RequestMapping(value = "/send/{num}/{approver}", method = RequestMethod.GET)
+    public String sendApproval(@PathVariable("num") String num, @PathVariable("approver") String approver){
+        return inbox.SendAproval(num, approver);
     }
     
     @RequestMapping("/clean")

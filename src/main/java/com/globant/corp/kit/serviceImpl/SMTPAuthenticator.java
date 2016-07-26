@@ -1,5 +1,6 @@
 package com.globant.corp.kit.serviceImpl;
 
+import com.globant.corp.kit.configuration.EmailConfiguration;
 import javax.mail.PasswordAuthentication;
 
 /**
@@ -7,7 +8,15 @@ import javax.mail.PasswordAuthentication;
  * @author ramiro.acoglanis
  */
 public class SMTPAuthenticator extends javax.mail.Authenticator {
-    public PasswordAuthentication getPasswordAuthentication(String emailAccount, String emailPasswd) {
-        return new PasswordAuthentication(emailAccount, emailPasswd);
+
+    private EmailConfiguration config;
+    
+    public SMTPAuthenticator(EmailConfiguration config) {
+        this.config = config;
+    }
+    
+    @Override
+    public PasswordAuthentication getPasswordAuthentication() {
+        return new PasswordAuthentication(config.getEmailAccount(), config.getEmailPasswd());
     }
 }

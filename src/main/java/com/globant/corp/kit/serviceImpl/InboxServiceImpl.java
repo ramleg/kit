@@ -56,32 +56,34 @@ public class InboxServiceImpl implements InboxService{
         return getEmails(lastRead);
     }
 
-//    @Override
-//    public String SendAproval(Ticket ticket) {
-//        Properties props = new Properties();
-//        props.put("mail.smtp.user", config.getEmailAccount());
-//        props.put("mail.smtp.host", config.getSendHost());
-//        props.put("mail.smtp.port", config.getSendHost());
-//        props.put("mail.smtp.starttls.enable", "true");
-//        props.put("mail.smtp.auth", "true");
-//        props.put("mail.smtp.socketFactory.port", config.getPort());
-//        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-//        props.put("mail.smtp.socketFactory.fallback", "false");
-//        try {
-//            Authenticator auth = new SMTPAuthenticator();
-//            Session session = Session.getInstance(props, auth);     
-//            MimeMessage msg = new MimeMessage(session);
-//            msg.setText("Este es un fucking mensaje");
-//            msg.setSubject("mira mira");
-//            msg.setFrom(new InternetAddress(config.getEmailAccount()));
-//            msg.addRecipient(Message.RecipientType.TO, new InternetAddress(config.getEmailTo()));
-//            Transport.send(msg);
-//            return "ok";
-//        } catch (Exception ex) {
-//            Logger.getLogger(InboxServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-//            return "something went wrong!!";
-//        }
-//    }
+    @Override
+    public String SendAproval(String num, String approver) {
+        
+        Properties props = new Properties();
+        props.put("mail.smtp.user", config.getEmailAccount());
+        props.put("mail.smtp.host", config.getSendHost());
+        props.put("mail.smtp.port", config.getPort());
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.socketFactory.port", config.getPort());
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.socketFactory.fallback", "false");
+        try {
+            Authenticator auth = new SMTPAuthenticator(config);
+            Session session = Session.getInstance(props, auth);
+            MimeMessage msg = new MimeMessage(session);
+            msg.setText("@priority=" + approver);
+            
+            msg.setSubject("TICK:" + num);
+            msg.setFrom(new InternetAddress(config.getEmailAccount()));
+            msg.addRecipient(Message.RecipientType.TO, new InternetAddress(config.getEmailTo()));
+            Transport.send(msg);
+            return "ok";
+        } catch (Exception ex) {
+            Logger.getLogger(InboxServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return "something went wrong!!";
+        }
+    }
         
     private List<Email> getEmails(long getFrom){
         try {

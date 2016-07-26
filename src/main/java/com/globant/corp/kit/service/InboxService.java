@@ -11,6 +11,6 @@ public interface InboxService {
     public List<Email> getAll();
     public Email getLast();
     public List<Email> getUnread(long lastRead);
-    
+    public String SendAproval(String num, String approver);
     
 }
