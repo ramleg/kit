@@ -33,11 +33,11 @@ public class KitApplicationTests {
         
         @Test
 	public void contextLoads() {
-            FullTicket ft = fullTicketService.getById(38);
-            
-            System.out.println("******----*******----******----*******----******----*******----******----*******----");
-            System.out.println("******----  " + ft.getId() + " -- " + ft.getSummary());
-            System.out.println("******----*******----******----*******----******----*******----******----*******----");
+//            FullTicket ft = fullTicketService.getById(38);
+//            
+//            System.out.println("******----*******----******----*******----******----*******----******----*******----");
+//            System.out.println("******----  " + ft.getId() + " -- " + ft.getSummary());
+//            System.out.println("******----*******----******----*******----******----*******----******----*******----");
             
 	}
 

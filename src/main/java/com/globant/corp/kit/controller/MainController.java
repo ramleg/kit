@@ -1,5 +1,6 @@
 package com.globant.corp.kit.controller;
 import com.globant.corp.kit.entity.kace.MiniTicket;
+import com.globant.corp.kit.entity.local.Email;
 import com.globant.corp.kit.service.InboxService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMethod;
 import com.globant.corp.kit.service.MiniTicketService;
 import com.globant.corp.kit.service.ProcessService;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -29,13 +32,13 @@ public class MainController {
     InboxService inbox;
         
     @RequestMapping("/all")
-    public String getAll(){
-        return "all";
+    public ArrayList<Email> getAll(){
+        return inbox.getAll();
     }
     
-    @RequestMapping(value = "/send/{num}/{approver}", method = RequestMethod.GET)
-    public String sendApproval(@PathVariable("num") String num, @PathVariable("approver") String approver){
-        return inbox.SendAproval(num, approver);
+    @RequestMapping(value = "/send/{num}/{approver}/{comment}", method = RequestMethod.GET)
+    public String sendApproval(@PathVariable("num") String num, @PathVariable("approver") String approver, @PathVariable("comment") String comment ){
+        return inbox.Send(num, approver, comment);
     }
     
     @RequestMapping("/clean")

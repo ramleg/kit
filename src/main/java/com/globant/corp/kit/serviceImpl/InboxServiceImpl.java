@@ -14,7 +14,12 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.globant.corp.kit.service.InboxService;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
 /**
  *
  * @author ramiro.acoglanis
@@ -30,7 +35,7 @@ public class InboxServiceImpl implements InboxService{
     private Store store;
 
     @Override
-    public List<Email> getAll(){
+    public ArrayList<Email> getAll(){
         return getEmails(1);
     }
     
@@ -56,36 +61,9 @@ public class InboxServiceImpl implements InboxService{
         return getEmails(lastRead);
     }
 
-    @Override
-    public String SendAproval(String num, String approver) {
+  
         
-        Properties props = new Properties();
-        props.put("mail.smtp.user", config.getEmailAccount());
-        props.put("mail.smtp.host", config.getSendHost());
-        props.put("mail.smtp.port", config.getPort());
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.socketFactory.port", config.getPort());
-        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        props.put("mail.smtp.socketFactory.fallback", "false");
-        try {
-            Authenticator auth = new SMTPAuthenticator(config);
-            Session session = Session.getInstance(props, auth);
-            MimeMessage msg = new MimeMessage(session);
-            msg.setText("@priority=" + approver);
-            
-            msg.setSubject("TICK:" + num);
-            msg.setFrom(new InternetAddress(config.getEmailAccount()));
-            msg.addRecipient(Message.RecipientType.TO, new InternetAddress(config.getEmailTo()));
-            Transport.send(msg);
-            return "ok";
-        } catch (Exception ex) {
-            Logger.getLogger(InboxServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return "something went wrong!!";
-        }
-    }
-        
-    private List<Email> getEmails(long getFrom){
+    private ArrayList<Email> getEmails(long getFrom){
         try {
             this.setFolder(config.getReadFolder(), Folder.READ_ONLY);
             // Attributes & Flags for ALL messages ..
@@ -100,15 +78,21 @@ public class InboxServiceImpl implements InboxService{
             ArrayList<Email> emailList = new ArrayList<>();
             
             for (Message msg : msgs) {
-                emailList.add(getKaceEmail(msg));
+                try {
+                    emailList.add(getKaceEmail(msg));
+                } catch (IOException ex) {
+                    Logger.getLogger(InboxServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             
             folder.close(false);
             store.close();
             
+            
+            
             return emailList;
             
-        } catch (MessagingException | IOException | EmailException ex) {
+        } catch (MessagingException | EmailException ex) {
             Logger.getLogger(InboxServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         } 
@@ -183,8 +167,69 @@ public class InboxServiceImpl implements InboxService{
         Multipart mp = (Multipart) msg.getContent();
         BodyPart bp = mp.getBodyPart(0);
         kaceEmail.setContent((String) bp.getContent());
-
+        
+        HashMap<String, String> headers = new HashMap<>();
+        Enumeration eHeaders =  msg.getAllHeaders();
+        while(eHeaders.hasMoreElements()){
+            Header h = (Header) eHeaders.nextElement();
+            headers.put(h.getName(), h.getValue());
+        }
+        kaceEmail.setHeaders(headers);
+        
         return kaceEmail;
     }
+    
+    
+    
+    @Override
+    public String Send(String num, String approver, String comment) {
         
+        Properties props = new Properties();
+        
+        
+        props.put("mail.smtp.user", config.getEmailAccount());
+        props.put("mail.smtp.host", config.getSendHost());
+        props.put("mail.smtp.port", config.getPort());
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.socketFactory.port", config.getPort());
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.socketFactory.fallback", "false");
+        try {
+            Authenticator auth = new SMTPAuthenticator(config);
+            Session session = Session.getInstance(props, auth);
+            MimeMessage msg = new MimeMessage(session);
+            Multipart multiPart = new MimeMultipart("alternative");
+            MimeBodyPart textPart = new MimeBodyPart();
+            
+            msg.setSubject("TICK:" + num);
+            approver = null;
+            if(approver != null){
+                textPart.setText("@custom_1=" + approver, "utf-8");
+                multiPart.addBodyPart(textPart);
+            }
+            if(comment != null){
+                textPart.setText(comment, "utf-8");
+                multiPart.addBodyPart(textPart);
+            }
+            
+            msg.setContent(multiPart);
+            
+            InternetAddress mailFrom = new InternetAddress(config.getEmailAccount());
+            msg.setFrom(mailFrom);
+            
+            InternetAddress mailTo = new InternetAddress(config.getEmailTo());
+            msg.addRecipient(Message.RecipientType.TO,mailTo);
+            
+            msg.setSentDate(new Date());
+            
+            msg.addHeader("Delivered-To", config.getEmailAccount());
+            Transport.send(msg);
+            
+            return "ok";
+        } catch (Exception ex) {
+            Logger.getLogger(InboxServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return "something went wrong!!";
+        }
+    }
 }

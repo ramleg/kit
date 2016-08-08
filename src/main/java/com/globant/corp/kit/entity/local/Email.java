@@ -1,6 +1,9 @@
 package com.globant.corp.kit.entity.local;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 /**
  *
@@ -33,6 +37,9 @@ public class Email {
     private Date sendDate;
     private Boolean processed = false;
     private String action;
+    
+    @Transient
+    private HashMap<String, String> headers;
     
     
     public Email() {
@@ -107,7 +114,14 @@ public class Email {
     public void setAction(String action) {
         this.action = action;
     }
-    
-    
+
+    public HashMap<String, String> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(HashMap<String, String> headers) {
+        this.headers = headers;
+    }
+
         
 }
