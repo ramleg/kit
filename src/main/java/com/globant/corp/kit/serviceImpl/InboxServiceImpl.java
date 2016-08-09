@@ -88,8 +88,6 @@ public class InboxServiceImpl implements InboxService{
             folder.close(false);
             store.close();
             
-            
-            
             return emailList;
             
         } catch (MessagingException | EmailException ex) {

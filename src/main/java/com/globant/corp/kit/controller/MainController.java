@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMethod;
 import com.globant.corp.kit.service.MiniTicketService;
 import com.globant.corp.kit.service.ProcessService;
+import com.globant.corp.kit.service.RestConsumerService;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 /**
  *
@@ -30,6 +32,9 @@ public class MainController {
     
     @Autowired
     InboxService inbox;
+    
+    @Autowired
+    RestConsumerService rest;
         
     @RequestMapping("/all")
     public ArrayList<Email> getAll(){
@@ -56,4 +61,23 @@ public class MainController {
     public String test(@PathVariable("data") String data){
         return data;
     }
+    
+    @RequestMapping(value = "/post", method = RequestMethod.GET)
+    public String postToGata(){
+        
+        HashMap<String, String> body = new HashMap<>();
+        body.put("title", "Ticket#50236");
+        body.put("dueDate", "2016-08-01");
+        body.put("approvalRequestTypeId", "2");
+        body.put("approver", "fulanito");
+        body.put("body", "<html><body></body></html>");
+        body.put("author", "Fabio Olaechea");
+        body.put("description", "Business Meals for Project Glow");
+        body.put("language", "english");
+        body.put("approveUrl", "https://gata.corp.globant.com/fake/approve-url");
+        body.put("rejectUrl", "https://gata.corp.globant.com/fake/reject-url");
+                
+        return rest.sendToGata(body).getBody().toString();
+    }
+    
 }
