@@ -8,5 +8,5 @@ import org.springframework.http.ResponseEntity;
  * @author ramiro.acoglanis
  */
 public interface RestConsumerService {
-    public ResponseEntity sendToGata(HashMap<String, String> body);
+    public ResponseEntity postToGata(HashMap<String, String> body);
 }

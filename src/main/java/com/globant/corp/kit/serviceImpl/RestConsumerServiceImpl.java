@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -33,7 +34,7 @@ public class RestConsumerServiceImpl implements RestConsumerService{
     
     
     @Override
-    public ResponseEntity sendToGata(HashMap<String, String> body){
+    public ResponseEntity postToGata(HashMap<String, String> body){
         
         HashMap<String, String> loginData = new HashMap<>();
         loginData.put("username", gataUser);
@@ -42,7 +43,9 @@ public class RestConsumerServiceImpl implements RestConsumerService{
         String token = getToken(gataUrl + loginUrl, loginData).get("session_token");
         System.out.println("Da Token: ---> " + token);
         try {
-            return new RestTemplate().exchange(gataUrl + appReq, HttpMethod.POST, getHttpEntity(body, token), Object.class);
+            RestTemplate rt = new RestTemplate();
+            return rt.exchange(gataUrl + appReq, HttpMethod.POST, getHttpEntity(body, token), Object.class);
+            
         } catch (IOException ex) {
             Logger.getLogger(RestConsumerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -58,8 +61,10 @@ public class RestConsumerServiceImpl implements RestConsumerService{
     private HttpEntity<HashMap> getHttpEntity(HashMap body, String token) throws IOException {
 
         HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("token", token);
-        headers.add("content-type", "application/json");
+        
+        HttpEntity<HashMap> entity = new HttpEntity<>(body, headers);
         
         return new HttpEntity<>(body, headers);
 
@@ -74,3 +79,5 @@ public class RestConsumerServiceImpl implements RestConsumerService{
     }
     
 }
+
+

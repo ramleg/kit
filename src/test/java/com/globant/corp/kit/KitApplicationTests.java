@@ -3,6 +3,7 @@ package com.globant.corp.kit;
 import com.globant.corp.kit.entity.kace.FullTicket;
 import com.globant.corp.kit.entity.kace.MiniTicket;
 import com.globant.corp.kit.service.FullTicketService;
+import com.globant.corp.kit.service.InboxService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,24 +25,33 @@ public class KitApplicationTests {
     @Autowired
     RestConsumerService rest;
     
+    @Autowired
+    InboxService inbox;
+    
         
+//      @Test
+//	public void contextLoads() {
+//            
+//        HashMap<String, String> body = new HashMap<>();
+//        body.put("title", "Ticket#50236");
+//        body.put("dueDate", "2017-08-01");
+//        body.put("approvalRequestTypeId", "34");
+//        body.put("approver", "fulanito");
+//        body.put("body", "<html><body></body></html>");
+//        body.put("author", "Fabio Olaechea");
+//        body.put("description", "Business Meals for Project Glow");
+//        body.put("language", "english");
+//        body.put("approveUrl", "https://gata.corp.globant.com/fake/approve-url");
+//        body.put("rejectUrl", "https://gata.corp.globant.com/fake/reject-url");
+//        
+//        System.out.println(rest.postToGata(body).getBody().toString());
+//            
+//	}
+
         @Test
 	public void contextLoads() {
             
-        HashMap<String, String> body = new HashMap<>();
-        body.put("title", "Ticket#50236");
-        body.put("dueDate", "2016-08-01");
-        body.put("approvalRequestTypeId", "2");
-        body.put("approver", "fulanito");
-        body.put("body", "<html><body></body></html>");
-        body.put("author", "Fabio Olaechea");
-        body.put("description", "Business Meals for Project Glow");
-        body.put("language", "english");
-        body.put("approveUrl", "https://gata.corp.globant.com/fake/approve-url");
-        body.put("rejectUrl", "https://gata.corp.globant.com/fake/reject-url");
-        
-        System.out.println(rest.sendToGata(body).getBody().toString());
+            inbox.Send("0557", "", "comment from java");
             
 	}
-
 }

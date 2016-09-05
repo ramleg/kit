@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimeUtility;
 /**
  *
  * @author ramiro.acoglanis
@@ -152,7 +153,7 @@ public class InboxServiceImpl implements InboxService{
     }
     
     private Email getKaceEmail(Message msg) throws MessagingException, IOException{
-
+        msg = (MimeMessage) msg;
         Email kaceEmail = new Email();
         kaceEmail.setUid(ufolder.getUID(msg));
         Address[] from = msg.getFrom();
@@ -165,6 +166,8 @@ public class InboxServiceImpl implements InboxService{
         Multipart mp = (Multipart) msg.getContent();
         BodyPart bp = mp.getBodyPart(0);
         kaceEmail.setContent((String) bp.getContent());
+        
+        
         
         HashMap<String, String> headers = new HashMap<>();
         Enumeration eHeaders =  msg.getAllHeaders();
@@ -197,31 +200,37 @@ public class InboxServiceImpl implements InboxService{
             Authenticator auth = new SMTPAuthenticator(config);
             Session session = Session.getInstance(props, auth);
             MimeMessage msg = new MimeMessage(session);
+            
             Multipart multiPart = new MimeMultipart("alternative");
+            
             MimeBodyPart textPart = new MimeBodyPart();
+            MimeBodyPart htmlPart = new MimeBodyPart();
+            
             
             msg.setSubject("TICK:" + num);
-            approver = null;
-            if(approver != null){
-                textPart.setText("@custom_1=" + approver, "utf-8");
-                multiPart.addBodyPart(textPart);
-            }
-            if(comment != null){
-                textPart.setText(comment, "utf-8");
-                multiPart.addBodyPart(textPart);
-            }
-            
-            msg.setContent(multiPart);
-            
+            msg.setSentDate(new Date());
+            msg.addHeader("Delivered-To", config.getEmailAccount());
             InternetAddress mailFrom = new InternetAddress(config.getEmailAccount());
             msg.setFrom(mailFrom);
             
             InternetAddress mailTo = new InternetAddress(config.getEmailTo());
             msg.addRecipient(Message.RecipientType.TO,mailTo);
+
+//            msg.setText(MimeUtility.encodeText("messege from java", MimeUtility.getDefaultJavaCharset(), "B"));
+
+            htmlPart.setContent("messege from java", "text/html; charset=utf-8");
+            multiPart.addBodyPart(htmlPart);
+            textPart.setContent("messege from java", "text/plain; charset=utf-8");
+            multiPart.addBodyPart(textPart);
             
-            msg.setSentDate(new Date());
+            msg.setContent(multiPart);
+            msg.setContent("<div>" + comment + "</div>", "text/html; charset=utf-8");
+
+            msg.saveChanges();
+//            msg.setHeader("Content-Transfer-Encoding", "8bit");
+//            msg.setHeader("Content-Transfer-Encoding", "base64");
+//            msg.setHeader("Content-Transfer-Encoding", "quoted-printable");
             
-            msg.addHeader("Delivered-To", config.getEmailAccount());
             Transport.send(msg);
             
             return "ok";

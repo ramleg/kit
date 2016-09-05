@@ -40,7 +40,8 @@ public class Email {
     
     @Transient
     private HashMap<String, String> headers;
-    
+    @Transient
+    private String encoding;
     
     public Email() {
     }
@@ -123,5 +124,14 @@ public class Email {
         this.headers = headers;
     }
 
+    public String getEncoding() {
+        return encoding;
+    }
+
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
+    
         
 }

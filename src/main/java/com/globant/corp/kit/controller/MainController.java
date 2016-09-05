@@ -1,5 +1,4 @@
 package com.globant.corp.kit.controller;
-import com.globant.corp.kit.entity.kace.MiniTicket;
 import com.globant.corp.kit.entity.local.Email;
 import com.globant.corp.kit.service.InboxService;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -77,7 +76,7 @@ public class MainController {
         body.put("approveUrl", "https://gata.corp.globant.com/fake/approve-url");
         body.put("rejectUrl", "https://gata.corp.globant.com/fake/reject-url");
                 
-        return rest.sendToGata(body).getBody().toString();
+        return rest.postToGata(body).getBody().toString();
     }
     
 }
