@@ -29,7 +29,7 @@ public class EmailServiceImpl implements EmailService{
 
     @Override
     public Iterable<Email> getAll() {
-        return null;
+        return repo.findAll();
     }
 
     @Override

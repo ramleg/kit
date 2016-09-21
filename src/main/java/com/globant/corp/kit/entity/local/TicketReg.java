@@ -11,6 +11,7 @@ import javax.persistence.TemporalType;
  *
  * @author ramiro.acoglanis
  */
+
 @Entity(name="TicketReg")
 @Table(name="ticket_reg")
 public class TicketReg {
