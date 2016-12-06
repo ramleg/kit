@@ -1,9 +1,8 @@
-package com.globant.corp.kit.serviceImpl;
+package com.globant.corp.kit.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import com.globant.corp.kit.service.EmailService;
 
 /**
  *
@@ -12,8 +11,9 @@ import com.globant.corp.kit.service.EmailService;
 @Service
 public class SchedulerService {
          
-    @Scheduled(fixedDelay = 15000)
+    @Scheduled(fixedDelay = 30000)
     public void ProcessEmailToDataBase(){
+        
         
         
     }

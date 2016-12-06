@@ -1,18 +1,32 @@
 package com.globant.corp.kit;
 
-import com.globant.corp.kit.entity.kace.FullTicket;
-import com.globant.corp.kit.entity.kace.MiniTicket;
-import com.globant.corp.kit.service.FullTicketService;
+import com.globant.corp.kit.entity.kace.Ticket;
+import com.globant.corp.kit.entity.local.ApprovalRequest;
+import com.globant.corp.kit.repo.kace.TicketRepo;
+import com.globant.corp.kit.repo.local.ApprovalRequestRepo;
+import com.globant.corp.kit.service.ApprovalRequestService;
 import com.globant.corp.kit.service.InboxService;
+import com.globant.corp.kit.service.LdapService;
+import com.globant.corp.kit.service.ProcessService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import com.globant.corp.kit.service.MiniTicketService;
-import com.globant.corp.kit.service.RestConsumerService;
 import java.util.HashMap;
+import com.globant.corp.kit.service.RestServiceConsumer;
+import com.globant.corp.kit.service.TicketService;
+import com.globant.corp.kit.service.TicketStatusService;
+import com.globant.corp.kit.util.LogbackDemo;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = KitApplication.class)
@@ -20,38 +34,34 @@ import java.util.HashMap;
 public class KitApplicationTests {
 
     @Autowired
-    FullTicketService fullTicketService;
+    TicketService ticketService;
     
     @Autowired
-    RestConsumerService rest;
+    RestServiceConsumer rest;
+    
+    @Autowired
+    TicketRepo ticketRepo;
     
     @Autowired
     InboxService inbox;
     
-        
-//      @Test
-//	public void contextLoads() {
-//            
-//        HashMap<String, String> body = new HashMap<>();
-//        body.put("title", "Ticket#50236");
-//        body.put("dueDate", "2017-08-01");
-//        body.put("approvalRequestTypeId", "34");
-//        body.put("approver", "fulanito");
-//        body.put("body", "<html><body></body></html>");
-//        body.put("author", "Fabio Olaechea");
-//        body.put("description", "Business Meals for Project Glow");
-//        body.put("language", "english");
-//        body.put("approveUrl", "https://gata.corp.globant.com/fake/approve-url");
-//        body.put("rejectUrl", "https://gata.corp.globant.com/fake/reject-url");
-//        
-//        System.out.println(rest.postToGata(body).getBody().toString());
-//            
-//	}
+    @Autowired
+    ProcessService prs;
+    
+    @Autowired
+    TicketStatusService tss;
 
-        @Test
-	public void contextLoads() {
-            
-            inbox.Send("0557", "", "comment from java");
-            
-	}
+    @Autowired
+    ApprovalRequestRepo aprRepo;
+    
+    @Autowired
+    LdapService ldap;
+
+
+    @Test
+    public void contextLoads() throws ParseException {
+        prs.updateGata();
+    }
+
+
 }

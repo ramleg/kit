@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * @author ramiro.acoglanis
  */
 @Component
-public class EmailConfiguration {
+public class EmailConfig {
     
     @Value("${kit.email.settings.protocol}")
     private String protocol;

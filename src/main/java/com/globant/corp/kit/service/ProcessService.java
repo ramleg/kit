@@ -1,5 +1,9 @@
 package com.globant.corp.kit.service;
 
+import com.globant.corp.kit.entity.kace.Ticket;
+import java.util.HashMap;
+import java.util.List;
+
 
 /**
  *
@@ -7,7 +11,6 @@ package com.globant.corp.kit.service;
  */
 public interface ProcessService {
     
-    public String rebuildRegistredTickets();
-    public void systemUpdate();
-    
+    public boolean updateGata();
+    public HashMap<String,String> kgiEndPoint(String isApproved, String ticketNum, String approver, String comment);
 }

@@ -12,8 +12,9 @@ import org.springframework.web.client.RestTemplate;
 @EnableScheduling
 public class KitApplication {
 
-        private static final Logger log = LoggerFactory.getLogger(KitApplication.class);
-    
+        private final Logger logger = LoggerFactory.getLogger(this.getClass());
+        public static String serviceStatus;
+        
 	public static void main(String[] args) {
 		SpringApplication.run(KitApplication.class, args);
 	}

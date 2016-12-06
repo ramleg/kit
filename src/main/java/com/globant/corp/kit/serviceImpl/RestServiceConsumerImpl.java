@@ -1,6 +1,5 @@
 package com.globant.corp.kit.serviceImpl;
 
-import com.globant.corp.kit.service.RestConsumerService;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -13,13 +12,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import com.globant.corp.kit.service.RestServiceConsumer;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author ramiro.acoglanis
  */
 @Service
-public class RestConsumerServiceImpl implements RestConsumerService{
+public class RestServiceConsumerImpl implements RestServiceConsumer{
     
     @Value("${kit.gata.url}")
     private String gataUrl;
@@ -31,7 +32,7 @@ public class RestConsumerServiceImpl implements RestConsumerService{
     private String gataUser;
     @Value("${kit.gata.passwd}")
     private String gataPasswd;
-    
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
     
     @Override
     public ResponseEntity postToGata(HashMap<String, String> body){
@@ -41,13 +42,12 @@ public class RestConsumerServiceImpl implements RestConsumerService{
         loginData.put("password", gataPasswd);
                 
         String token = getToken(gataUrl + loginUrl, loginData).get("session_token");
-        System.out.println("Da Token: ---> " + token);
         try {
             RestTemplate rt = new RestTemplate();
             return rt.exchange(gataUrl + appReq, HttpMethod.POST, getHttpEntity(body, token), Object.class);
             
         } catch (IOException ex) {
-            Logger.getLogger(RestConsumerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("ERROR: Post To GATA 'RestTemplate.exchange()'");
             return null;
         }
     }
@@ -57,7 +57,6 @@ public class RestConsumerServiceImpl implements RestConsumerService{
         ResponseEntity<HashMap> response = restTemplate.postForEntity(url, loginData, HashMap.class);
         return response.getBody();
     }
-    
     private HttpEntity<HashMap> getHttpEntity(HashMap body, String token) throws IOException {
 
         HttpHeaders headers = new HttpHeaders();
@@ -67,12 +66,8 @@ public class RestConsumerServiceImpl implements RestConsumerService{
         HttpEntity<HashMap> entity = new HttpEntity<>(body, headers);
         
         return new HttpEntity<>(body, headers);
-
     }
-    
-    
-    
-    public String get(String url, String data) {
+    private String get(String url, String data) {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForObject(url + data, null, String.class);
         return response.getStatusCode().toString();

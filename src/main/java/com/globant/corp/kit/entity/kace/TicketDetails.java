@@ -12,9 +12,9 @@ import javax.persistence.Table;
  * @author ramiro.acoglanis
  */
 
-@Entity(name="FullHistory")
+@Entity(name="TicketDetails")
 @Table(name="HD_TICKET_CHANGE")
-public class FullHistory {
+public class TicketDetails {
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
