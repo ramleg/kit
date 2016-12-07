@@ -42,22 +42,22 @@ public class TicketServiceImpl implements TicketService{
     }
     
     @Override
-    public List<Ticket> getPendingApprovalTicketsList(){
+    public List<Ticket> getPendingApprovalTicketsList(List<Integer> queuesIds){
         
         List<Integer> approvalStatusIds = tss.getApprovalStatusIds();
         
         List<Ticket> list =  new ArrayList<>();
-        for(Ticket tkt : repo.findByStatusInAndQueueInAndApproversIsNot(approvalStatusIds, queueService.getQueuesIds(), "")){
+        for(Ticket tkt : repo.findByStatusInAndQueueInAndApproversIsNot(approvalStatusIds, queuesIds, "")){
             list.add(tkt);
         }
         return list;
     }
     
     @Override
-    public List<ApprovalRequest> getApprovalRequestList(){
+    public List<ApprovalRequest> getApprovalRequestList(List<Integer> queuesIds){
         
         List<ApprovalRequest> approvalRequestList = new ArrayList<>();
-        List<Ticket> pendingApprovalTickets = getPendingApprovalTicketsList();
+        List<Ticket> pendingApprovalTickets = getPendingApprovalTicketsList(queuesIds);
         
         for(Ticket tkt : pendingApprovalTickets){
             for(String approver : tkt.getApproversList()){

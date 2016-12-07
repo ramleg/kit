@@ -1,6 +1,7 @@
 package com.globant.corp.kit.serviceImpl;
 
 import com.globant.corp.kit.configuration.AppConfig;
+import com.globant.corp.kit.entity.kace.Queue;
 import com.globant.corp.kit.entity.kace.Ticket;
 import com.globant.corp.kit.exception.KaceMailingException;
 import com.globant.corp.kit.exception.LdapContextException;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import com.globant.corp.kit.service.ProcessService;
+import com.globant.corp.kit.service.QueueService;
 import org.springframework.beans.factory.annotation.Value;
 import com.globant.corp.kit.service.RestServiceConsumer;
 import com.globant.corp.kit.service.TicketService;
@@ -56,17 +58,21 @@ public class ProcessServiceImpl implements ProcessService{
     InboxService inbox;
     @Autowired
     LdapService ldap;
+    @Autowired
+    QueueService queueService;
     
     @Override
     @Transactional
     public boolean updateGata(){
         
         Session smtpSession = inbox.getSession();
+        List<Queue> queueList = queueService.getAllwedQueues();
+        List<Integer> queuesIds = queueService.getQueuesIds(queueList);
         
         try{
             DirContext ctx = ldap.getContext();
             // Itero la lista de ticket extraidos de la DB de Kace
-            for(Ticket ticket : ticketService.getPendingApprovalTicketsList()){
+            for(Ticket ticket : ticketService.getPendingApprovalTicketsList(queuesIds)){
                 // Itero cada ticket segun la cantidad de approvers que tiene
                 for(String approver : ticket.getApproversList()){
                     // Valido individualmente cada approver antes de ejecutar el proceso
@@ -91,7 +97,8 @@ public class ProcessServiceImpl implements ProcessService{
                 // si luego de las validaciones 'approvalRequest' esta vacío. No envio nada y sigo con el otro ticket.
                 if(!approvalRequest.isEmpty() || !validationError.isEmpty() || ticket.isAllowClean()){
                     //envia mail a kace para actualizar el ticket
-                    if(sendUpdateToKace(ticket, smtpSession)){
+                    String emailTo = queueService.getEmail(queueList, ticket.getQueueId());
+                    if(sendUpdateToKace(ticket, emailTo, smtpSession)){
                         // si el envio del mail es true, envio los request a gata y guardo en local DB
                         for(String approver: approvalRequest){
                             // post to gata
@@ -101,12 +108,8 @@ public class ProcessServiceImpl implements ProcessService{
                                 // guarda en local DB el request
                                 approvalService.save(ticket.getId(), approver);
                                 logger.error("INFO: request saved in local DB: [" + ticket.getId() + "/" + approver + "]");
-                            }else{
-                                logger.error("ERROR: while sending data to GATA - Ticket#" + ticket.getId() + " - Arrover:'" + approver + "'");
                             }
                         }
-                    }else{
-                        logger.error("ERROR: while sending email to KACE - Ticket#" + ticket.getId());
                     }
                 }
             }
@@ -143,6 +146,7 @@ public class ProcessServiceImpl implements ProcessService{
             if(response.getStatusCodeValue()==201){
                 return true;
             }else{
+                logger.error("ERROR: while sending data to GATA - Ticket#" + ticket.getId() + " - Arrover:'" + approver + "'");
                 return false;
             }
     }
@@ -160,7 +164,7 @@ public class ProcessServiceImpl implements ProcessService{
         }
     }
     
-    private boolean sendUpdateToKace(Ticket ticket, Session smtpSession){
+    private boolean sendUpdateToKace(Ticket ticket,String emailTo,  Session smtpSession){
         
         String subject = "TICK:" + ticket.getId();
         
@@ -185,10 +189,13 @@ public class ProcessServiceImpl implements ProcessService{
             }
         }
                 
-        if(inbox.Send(subject, content, smtpSession)){
+        try {
+            inbox.Send(subject, content, emailTo, smtpSession);
             return true;
+        } catch (KaceMailingException ex) {
+            logger.error("ERROR: while sending email to KACE - Ticket#" + ticket.getId());
+            return false;
         }
-        return false;
     }
     
     private String getActualCcList(Ticket ticket){
@@ -225,7 +232,9 @@ public class ProcessServiceImpl implements ProcessService{
     
     private void sendApprovalToKace(String isApproved, String ticketNum, String approver, String comment) throws KaceMailingException, NoApprovalRequestFoudException{
         
-        if(approvalService.exist(Integer.parseInt(ticketNum), approver)){
+            approvalService.exist(Integer.parseInt(ticketNum), approver);
+            
+            String queueEmail = queueService.getEmail(Integer.parseInt(ticketNum));
             
             String approvalStatus = "yes".equals(isApproved)?"APPROVED":"REJECTED";
             
@@ -240,11 +249,8 @@ public class ProcessServiceImpl implements ProcessService{
                     "@status=" + ticketStatus + nl + 
                     "## KGI Messege: ..." + nl +
                     "## The user '" + approver + "' - " + approvalStatus + " - the request. " + nl + additionalCommnets;
-            if(!inbox.Send(subject, content, inbox.getSession()))throw new KaceMailingException("Mail to Kace Failure");
+            inbox.Send(subject, content, queueEmail, inbox.getSession());
             
-        }else{
-            throw new NoApprovalRequestFoudException("Approval Request not found for the user: '" + approver + "'");
-        }
         
         
     }

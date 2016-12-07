@@ -42,7 +42,7 @@ public class Ticket {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
     @Column(name="HD_QUEUE_ID")
-    private Integer queue;
+    private Integer queueId;
     @Column(name="CUSTOM_FIELD_VALUE0")
     private String approvers;
     @Column(name="HD_STATUS_ID")
@@ -115,12 +115,12 @@ public class Ticket {
         this.modified = modified;
     }
 
-    public Integer getQueue() {
-        return queue;
+    public Integer getQueueId() {
+        return queueId;
     }
 
-    public void setQueue(Integer queue) {
-        this.queue = queue;
+    public void setQueueId(Integer queueId) {
+        this.queueId = queueId;
     }
 
     public Integer getStatus() {

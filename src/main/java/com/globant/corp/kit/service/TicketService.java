@@ -13,7 +13,7 @@ import java.util.List;
 public interface TicketService {
     public Iterable<Ticket> getAll();
     public Ticket getById(Integer id);
-    public List<ApprovalRequest> getApprovalRequestList();
-    public List<Ticket> getPendingApprovalTicketsList();
+    public List<ApprovalRequest> getApprovalRequestList(List<Integer> queuesIds);
+    public List<Ticket> getPendingApprovalTicketsList(List<Integer> queuesIds);
     
 }

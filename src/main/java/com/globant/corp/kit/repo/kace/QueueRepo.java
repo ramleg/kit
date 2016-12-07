@@ -11,4 +11,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface QueueRepo extends CrudRepository<Queue, Integer>{
     public List<Queue> findByAllowed(Integer id);
+    public Queue findById(Integer id);
 }

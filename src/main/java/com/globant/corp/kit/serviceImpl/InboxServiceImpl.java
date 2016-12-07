@@ -2,6 +2,7 @@ package com.globant.corp.kit.serviceImpl;
 
 import com.globant.corp.kit.util.SMTPAuthenticator;
 import com.globant.corp.kit.configuration.EmailConfig;
+import com.globant.corp.kit.exception.KaceMailingException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,10 +31,11 @@ public class InboxServiceImpl implements InboxService{
 
     
     @Override
-    public boolean Send(String subject, String content, Session session) {
+    public boolean Send(String subject, String content, String emailTo, Session session) throws KaceMailingException{
 
-        try {
+      
             
+        try {
             MimeMessage msg = new MimeMessage(session);
             Multipart multiPart = new MimeMultipart("alternative");
             MimeBodyPart textPart = new MimeBodyPart();
@@ -45,7 +47,7 @@ public class InboxServiceImpl implements InboxService{
             InternetAddress mailFrom = new InternetAddress(config.getEmailAccount());
             msg.setFrom(mailFrom);
             
-            InternetAddress mailTo = new InternetAddress(config.getEmailTo());
+            InternetAddress mailTo = new InternetAddress(emailTo);
             msg.addRecipient(Message.RecipientType.TO,mailTo);
 
             htmlPart.setContent("messege from java", "text/html; charset=utf-8");
@@ -61,10 +63,10 @@ public class InboxServiceImpl implements InboxService{
             Transport.send(msg);
             
             return true;
-        } catch (Exception ex) {
-            Logger.getLogger(InboxServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+        } catch (MessagingException ex) {
+            throw new KaceMailingException("Mail to Kace Failure");
         }
+        
     }
     
     

@@ -1,6 +1,7 @@
 package com.globant.corp.kit.serviceImpl;
 
 import com.globant.corp.kit.entity.local.ApprovalRequest;
+import com.globant.corp.kit.exception.NoApprovalRequestFoudException;
 import com.globant.corp.kit.repo.local.ApprovalRequestRepo;
 import com.globant.corp.kit.service.ApprovalRequestService;
 import java.util.List;
@@ -28,12 +29,12 @@ public class ApprovalRequestServiceImpl implements ApprovalRequestService{
     }
     
     @Override
-    public boolean exist(Integer ticketNum, String approver) {
+    public boolean exist(Integer ticketNum, String approver) throws NoApprovalRequestFoudException {
         ApprovalRequest apr = repo.findByTicketNumAndApprover(ticketNum, approver);
         if(apr == null){
             return false;
         }else{
-            return true;
+            throw new NoApprovalRequestFoudException("Approval Request not found: [Ticket:" + ticketNum + "/Approver:" + approver + "]");
         }
     }
 
