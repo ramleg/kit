@@ -19,8 +19,6 @@ public class AppConfig {
     private String pendingApprovalState;
     @Value("${kit.application.approved-state}")
     private String approvedState;
-    @Value("${kit.application.rejected-state}")
-    private String rejectedState;
     @Value("${kit.application.approvers-custom-field}")
     private String approversField;
     @Value("${kit.application.allowed-queues}")
@@ -54,10 +52,6 @@ public class AppConfig {
 
     public String getApprovedState(){
         return approvedState;
-    }
-
-    public String getRejectedState() {
-        return rejectedState;
     }
 
     public String getApproversField() {

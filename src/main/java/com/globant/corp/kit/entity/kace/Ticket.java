@@ -26,7 +26,6 @@ import javax.persistence.Transient;
 @Table(name="HD_TICKET")
 public class Ticket {
     
-    
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;

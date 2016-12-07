@@ -6,6 +6,7 @@ import com.globant.corp.kit.entity.local.ApprovalRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.globant.corp.kit.repo.kace.TicketRepo;
+import com.globant.corp.kit.service.QueueService;
 import com.globant.corp.kit.service.TicketService;
 import com.globant.corp.kit.service.TicketStatusService;
 import java.util.ArrayList;
@@ -23,6 +24,9 @@ public class TicketServiceImpl implements TicketService{
     
     @Autowired
     AppConfig appConfig;
+    
+    @Autowired
+    QueueService queueService;
     
     @Autowired
     TicketStatusService tss;
@@ -43,7 +47,7 @@ public class TicketServiceImpl implements TicketService{
         List<Integer> approvalStatusIds = tss.getApprovalStatusIds();
         
         List<Ticket> list =  new ArrayList<>();
-        for(Ticket tkt : repo.findByStatusInAndQueueInAndApproversIsNot(approvalStatusIds, appConfig.getAllowedQueuesList(), "")){
+        for(Ticket tkt : repo.findByStatusInAndQueueInAndApproversIsNot(approvalStatusIds, queueService.getQueuesIds(), "")){
             list.add(tkt);
         }
         return list;

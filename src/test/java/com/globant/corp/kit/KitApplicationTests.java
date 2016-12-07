@@ -8,6 +8,7 @@ import com.globant.corp.kit.service.ApprovalRequestService;
 import com.globant.corp.kit.service.InboxService;
 import com.globant.corp.kit.service.LdapService;
 import com.globant.corp.kit.service.ProcessService;
+import com.globant.corp.kit.service.QueueService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,10 +58,15 @@ public class KitApplicationTests {
     @Autowired
     LdapService ldap;
 
+    @Autowired
+    QueueService queueService;
 
     @Test
     public void contextLoads() throws ParseException {
         prs.updateGata();
+//        for(Integer i : queueService.getQueuesIds()){
+//            System.out.println("Queue ID: " + i);
+//        }
     }
 
 

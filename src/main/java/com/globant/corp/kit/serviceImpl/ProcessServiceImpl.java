@@ -2,7 +2,6 @@ package com.globant.corp.kit.serviceImpl;
 
 import com.globant.corp.kit.configuration.AppConfig;
 import com.globant.corp.kit.entity.kace.Ticket;
-import com.globant.corp.kit.entity.local.ApprovalRequest;
 import com.globant.corp.kit.exception.KaceMailingException;
 import com.globant.corp.kit.exception.LdapContextException;
 import com.globant.corp.kit.exception.NoApprovalRequestFoudException;
@@ -22,6 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
+import javax.mail.Session;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.transaction.Transactional;
@@ -61,6 +61,8 @@ public class ProcessServiceImpl implements ProcessService{
     @Transactional
     public boolean updateGata(){
         
+        Session smtpSession = inbox.getSession();
+        
         try{
             DirContext ctx = ldap.getContext();
             // Itero la lista de ticket extraidos de la DB de Kace
@@ -89,7 +91,7 @@ public class ProcessServiceImpl implements ProcessService{
                 // si luego de las validaciones 'approvalRequest' esta vacío. No envio nada y sigo con el otro ticket.
                 if(!approvalRequest.isEmpty() || !validationError.isEmpty() || ticket.isAllowClean()){
                     //envia mail a kace para actualizar el ticket
-                    if(sendUpdateToKace(ticket)){
+                    if(sendUpdateToKace(ticket, smtpSession)){
                         // si el envio del mail es true, envio los request a gata y guardo en local DB
                         for(String approver: approvalRequest){
                             // post to gata
@@ -120,9 +122,6 @@ public class ProcessServiceImpl implements ProcessService{
             logger.error("ERROR: Unexpected error - Update process ended");
             return false;
         }
-        
-        
-
     }
     
     
@@ -161,7 +160,7 @@ public class ProcessServiceImpl implements ProcessService{
         }
     }
     
-    private boolean sendUpdateToKace(Ticket ticket){
+    private boolean sendUpdateToKace(Ticket ticket, Session smtpSession){
         
         String subject = "TICK:" + ticket.getId();
         
@@ -186,7 +185,7 @@ public class ProcessServiceImpl implements ProcessService{
             }
         }
                 
-        if(inbox.Send(subject, content)){
+        if(inbox.Send(subject, content, smtpSession)){
             return true;
         }
         return false;
@@ -241,7 +240,7 @@ public class ProcessServiceImpl implements ProcessService{
                     "@status=" + ticketStatus + nl + 
                     "## KGI Messege: ..." + nl +
                     "## The user '" + approver + "' - " + approvalStatus + " - the request. " + nl + additionalCommnets;
-            if(!inbox.Send(subject, content))throw new KaceMailingException("Mail to Kace Failure");
+            if(!inbox.Send(subject, content, inbox.getSession()))throw new KaceMailingException("Mail to Kace Failure");
             
         }else{
             throw new NoApprovalRequestFoudException("Approval Request not found for the user: '" + approver + "'");
