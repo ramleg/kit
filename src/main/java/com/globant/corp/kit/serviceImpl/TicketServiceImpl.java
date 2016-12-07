@@ -47,7 +47,7 @@ public class TicketServiceImpl implements TicketService{
         List<Integer> approvalStatusIds = tss.getApprovalStatusIds();
         
         List<Ticket> list =  new ArrayList<>();
-        for(Ticket tkt : repo.findByStatusInAndQueueInAndApproversIsNot(approvalStatusIds, queuesIds, "")){
+        for(Ticket tkt : repo.findByStatusInAndQueueIdInAndApproversIsNot(approvalStatusIds, queuesIds, "")){
             list.add(tkt);
         }
         return list;

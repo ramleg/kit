@@ -11,7 +11,7 @@ import org.springframework.data.repository.CrudRepository;
 public interface TicketRepo extends CrudRepository<Ticket, Integer>{
     
     public Ticket findById(Integer id);
-    public List<Ticket> findByStatusInAndQueueInAndApproversIsNot(List<Integer> stausNum, List<Integer> queues, String s);
+    public List<Ticket> findByStatusInAndQueueIdInAndApproversIsNot(List<Integer> stausNum, List<Integer> queues, String s);
     
     
 }
