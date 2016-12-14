@@ -21,13 +21,6 @@ import com.globant.corp.kit.service.TicketService;
 import com.globant.corp.kit.service.TicketStatusService;
 import com.globant.corp.kit.util.LogbackDemo;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = KitApplication.class)
@@ -63,10 +56,13 @@ public class KitApplicationTests {
 
     @Test
     public void contextLoads() throws ParseException {
-        prs.updateGata();
+//        prs.updateGata();
 //        for(Integer i : queueService.getQueuesIds()){
 //            System.out.println("Queue ID: " + i);
 //        }
+
+        LogbackDemo log = new LogbackDemo();
+        log.performTask();
     }
 
 

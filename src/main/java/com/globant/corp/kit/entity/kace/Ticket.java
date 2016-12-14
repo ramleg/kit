@@ -38,9 +38,7 @@ public class Ticket {
     private String ccList;
     @Column(name="DUE_DATE")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date duedate; 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date modified;
+    private Date duedate;
     @Column(name="HD_QUEUE_ID")
     private Integer queueId;
     @Column(name="CUSTOM_FIELD_VALUE0")
@@ -105,14 +103,6 @@ public class Ticket {
 
     public void setDuedate(Date duedate) {
         this.duedate = duedate;
-    }
-    
-    public Date getModified() {
-        return modified;
-    }
-
-    public void setModified(Date modified) {
-        this.modified = modified;
     }
 
     public Integer getQueueId() {

@@ -64,7 +64,7 @@ public class ProcessServiceImpl implements ProcessService{
     @Override
     @Transactional
     public boolean updateGata(){
-        
+        logger.info("Update Proccess Started!!");
         Session smtpSession = inbox.getSession();
         List<Queue> queueList = queueService.getAllwedQueues();
         List<Integer> queuesIds = queueService.getQueuesIds(queueList);
@@ -83,43 +83,46 @@ public class ProcessServiceImpl implements ProcessService{
                             // las validaciones son positivas por lo que agrego el request a la lista
                             ticket.addApprovalRequest(approver);
                         }else{
-                            logger.error("INFO: the request: [" + ticket.getId() + "/" + approver + "] was allready procesed. Waiting for response.");
+                            logger.info("The request: [" + ticket.getId() + "/" + approver + "] was allready procesed. Waiting for response.");
                             ticket.setAllowClean(true);
                         }
                     }else{
-                        logger.error("INFO: Invalid User - Ticket#" + ticket.getId() + " - Approver:'" + approver + "'");
+                        logger.info("Invalid User - Ticket#" + ticket.getId() + " - Approver:'" + approver + "'");
                         ticket.addValidationErrors("Approver Validation Error: '" + approver + "' doesn't exist");
                     }
                 }
                 
                 List<String> approvalRequest = ticket.getApprovalRequest();
                 List<String> validationError = ticket.getValidationErrors();
-                // si luego de las validaciones 'approvalRequest' esta vacío. No envio nada y sigo con el otro ticket.
+                // si luego de las validaciones tengo Request, Errores o hay que limpiar el ticket, envio el mail correspondiente a Kace
                 if(!approvalRequest.isEmpty() || !validationError.isEmpty() || ticket.isAllowClean()){
                     //envia mail a kace para actualizar el ticket
                     String emailTo = queueService.getEmail(queueList, ticket.getQueueId());
+                    logger.info("Sending mail to" + emailTo + " - [TICK:" + ticket.getId() + "]");
                     if(sendUpdateToKace(ticket, emailTo, smtpSession)){
+                        logger.info("Kace Updated via mail - [TICK:" + ticket.getId() + "]");
                         // si el envio del mail es true, envio los request a gata y guardo en local DB
                         for(String approver: approvalRequest){
                             // post to gata
-                            logger.error("INFO: Sending request to GATA [" + ticket.getId() + "/" + approver + "]");
+                            logger.info("Sending request to GATA [" + ticket.getId() + "/" + approver + "]");
                             if(postToGATA(ticket, approver)){
-                                logger.error("INFO: GATA received the request: [" + ticket.getId() + "/" + approver + "]");
+                                logger.info("GATA received the request: [" + ticket.getId() + "/" + approver + "]");
                                 // guarda en local DB el request
                                 approvalService.save(ticket.getId(), approver);
-                                logger.error("INFO: request saved in local DB: [" + ticket.getId() + "/" + approver + "]");
+                                logger.info("request saved in local DB: [" + ticket.getId() + "/" + approver + "]");
                             }
                         }
                     }
                 }
             }
+            logger.info("Update Proccess Finished!!");
             ctx.close();
             return true;
         }catch(LdapContextException e){
-            logger.error("ERROR: LDAP Service - Can't get 'DirContext'");
+            logger.error("LDAP Service - Can't get 'DirContext'");
             return false;
         }catch(NamingException e){
-            logger.error("INFO: Couldn't close Ldap Context");
+            logger.info("Couldn't close Ldap Context");
             return true;
         }catch(Exception e){
             logger.error("ERROR: Unexpected error - Update process ended");
@@ -159,7 +162,7 @@ public class ProcessServiceImpl implements ProcessService{
             c.add(Calendar.DATE, due);
             return sdf.format(c.getTime());
         } catch (ParseException ex) {
-            java.util.logging.Logger.getLogger(ProcessServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("ERROR: while seting up the DueDate");
             return "2099-12-01";
         }
     }
@@ -182,7 +185,7 @@ public class ProcessServiceImpl implements ProcessService{
         }
         
         if(!ticket.getValidationErrors().isEmpty()){
-            content = content + nl + nl + "## Errors Foud: ...";
+            content = content + nl + nl + "## Errors Found: ...";
             for(String error : ticket.getValidationErrors()){
                 content = content + nl + 
                         "## [" + error + "]";

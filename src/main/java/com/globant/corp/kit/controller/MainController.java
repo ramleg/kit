@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @author ramiro.acoglanis
  */
 @RestController
-@RequestMapping("/controller")
+@RequestMapping("/main")
 public class MainController {
     
     @Autowired

@@ -21,8 +21,6 @@ public class AppConfig {
     private String approvedState;
     @Value("${kit.application.approvers-custom-field}")
     private String approversField;
-    @Value("${kit.application.allowed-queues}")
-    private String allowedQueues;
     @Value("${kit.approval-url}")
     private String approvalURL;
     @Value("${kit.reject-url}")
@@ -56,18 +54,6 @@ public class AppConfig {
 
     public String getApproversField() {
         return approversField;
-    }    
-    
-    public String getAllowedQueues() {
-        return allowedQueues;
-    }
-    
-    public List<Integer> getAllowedQueuesList() {
-        List<Integer> queueList = new ArrayList<>();
-        for(String queue : this.allowedQueues.split(",")){
-            queueList.add(Integer.parseInt(queue.trim()));
-        }
-        return queueList;
     }
 
     public String getApprovalURL() {

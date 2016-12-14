@@ -29,12 +29,12 @@ public class ApprovalRequestServiceImpl implements ApprovalRequestService{
     }
     
     @Override
-    public boolean exist(Integer ticketNum, String approver) throws NoApprovalRequestFoudException {
+    public boolean exist(Integer ticketNum, String approver){
         ApprovalRequest apr = repo.findByTicketNumAndApprover(ticketNum, approver);
-        if(apr == null){
-            return false;
+        if(apr != null){
+            return true;
         }else{
-            throw new NoApprovalRequestFoudException("Approval Request not found: [Ticket:" + ticketNum + "/Approver:" + approver + "]");
+            return false;
         }
     }
 
