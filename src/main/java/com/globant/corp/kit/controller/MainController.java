@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.globant.corp.kit.service.ProcessService;
 import java.util.List;
 import com.globant.corp.kit.service.RestServiceConsumer;
+import com.globant.corp.kit.util.LogReader;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,15 +46,27 @@ public class MainController {
         return process.updateGata();
     }
     
-    @RequestMapping(value = "/post", method = RequestMethod.POST)
-    public String postApproval(@RequestBody Map<String, String> gata){
-        //return process.kgiEndPoint(gata.get("isApproved"), gata.get("ticketNum"), gata.get("approver"), gata.get("comment"));
-        return null;
+    @RequestMapping(value = "/log", produces = "text/html; charset=utf-8")
+    public String helloHtml() {
+        LogReader reader = new LogReader();
+        return reader.getLog();
     }
     
+//    @RequestMapping(value = "/post", method = RequestMethod.POST)
+//    public String postApproval(@RequestBody Map<String, String> gata){
+//        //return process.kgiEndPoint(gata.get("isApproved"), gata.get("ticketNum"), gata.get("approver"), gata.get("comment"));
+//        return null;
+//    }
+    
     @RequestMapping(value = "/approval/{isApproved}/{ticketNum}/{approver}/{comment}", method = RequestMethod.GET)
-    public ResponseEntity<Map> sendApproval(@PathVariable("isApproved") String isApproved, @PathVariable("ticketNum") String ticketNum, @PathVariable("approver") String approver, @PathVariable("comment") String comment ){
+    public ResponseEntity<Map> sendApprovalWithComment(@PathVariable("isApproved") String isApproved, @PathVariable("ticketNum") String ticketNum, @PathVariable("approver") String approver, @PathVariable("comment") String comment ){
         return new ResponseEntity<Map>(process.kgiEndPoint(isApproved, ticketNum, approver, comment), HttpStatus.OK);
     }
-       
+
+//    @RequestMapping(value = "/approval/{isApproved}/{ticketNum}/{approver}", method = RequestMethod.GET)
+//    public ResponseEntity<Map> sendApprovalNoComment(@PathVariable("isApproved") String isApproved, @PathVariable("ticketNum") String ticketNum, @PathVariable("approver") String approver){
+//        String comment = "";
+//        return new ResponseEntity<Map>(process.kgiEndPoint(isApproved, ticketNum, approver, comment), HttpStatus.OK);
+//    }
+    
 }

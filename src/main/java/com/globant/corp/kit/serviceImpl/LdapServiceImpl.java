@@ -63,7 +63,6 @@ public class LdapServiceImpl implements LdapService{
             SearchResult result = (SearchResult) resultSet.next();
             return true;
         }catch(NamingException e){
-            logger.info("INFO: Invalid User - '" + user + "'");
             return false;
         }
     }

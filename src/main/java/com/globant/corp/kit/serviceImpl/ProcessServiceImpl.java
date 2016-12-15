@@ -64,15 +64,18 @@ public class ProcessServiceImpl implements ProcessService{
     @Override
     @Transactional
     public boolean updateGata(){
-        logger.info("Update Proccess Started!!");
+        
         Session smtpSession = inbox.getSession();
         List<Queue> queueList = queueService.getAllwedQueues();
         List<Integer> queuesIds = queueService.getQueuesIds(queueList);
-        
-        try{
+        List<Ticket> pendingApprovalTickets = ticketService.getPendingApprovalTicketsList(queuesIds);
+        // Comienza el proceso siempre que haya tickets con approvals pendientes
+        if(!pendingApprovalTickets.isEmpty()){
+            try{
             DirContext ctx = ldap.getContext();
+            logger.info("-->> Update Proccess Started!!");
             // Itero la lista de ticket extraidos de la DB de Kace
-            for(Ticket ticket : ticketService.getPendingApprovalTicketsList(queuesIds)){
+            for(Ticket ticket : pendingApprovalTickets){
                 // Itero cada ticket segun la cantidad de approvers que tiene
                 for(String approver : ticket.getApproversList()){
                     // Valido individualmente cada approver antes de ejecutar el proceso
@@ -87,7 +90,7 @@ public class ProcessServiceImpl implements ProcessService{
                             ticket.setAllowClean(true);
                         }
                     }else{
-                        logger.info("Invalid User - Ticket#" + ticket.getId() + " - Approver:'" + approver + "'");
+                        logger.info("Invalid User - [TICK:" + ticket.getId() + " | APPROVER:'" + approver + "']");
                         ticket.addValidationErrors("Approver Validation Error: '" + approver + "' doesn't exist");
                     }
                 }
@@ -98,36 +101,38 @@ public class ProcessServiceImpl implements ProcessService{
                 if(!approvalRequest.isEmpty() || !validationError.isEmpty() || ticket.isAllowClean()){
                     //envia mail a kace para actualizar el ticket
                     String emailTo = queueService.getEmail(queueList, ticket.getQueueId());
-                    logger.info("Sending mail to" + emailTo + " - [TICK:" + ticket.getId() + "]");
                     if(sendUpdateToKace(ticket, emailTo, smtpSession)){
-                        logger.info("Kace Updated via mail - [TICK:" + ticket.getId() + "]");
+                        logger.info("Kace Updated via email - [TICK:" + ticket.getId() + "]");
                         // si el envio del mail es true, envio los request a gata y guardo en local DB
                         for(String approver: approvalRequest){
                             // post to gata
-                            logger.info("Sending request to GATA [" + ticket.getId() + "/" + approver + "]");
                             if(postToGATA(ticket, approver)){
-                                logger.info("GATA received the request: [" + ticket.getId() + "/" + approver + "]");
+                                logger.info("GATA received the request: [TICK:" + ticket.getId() + " | APPROVER:'" + approver + "']");
                                 // guarda en local DB el request
                                 approvalService.save(ticket.getId(), approver);
-                                logger.info("request saved in local DB: [" + ticket.getId() + "/" + approver + "]");
+                                logger.info("Request saved in local DB: [TICK:" + ticket.getId() + " | APPROVER:'" + approver + "']");
                             }
                         }
                     }
                 }
             }
-            logger.info("Update Proccess Finished!!");
             ctx.close();
+            logger.info("Update Proccess Finished!!");
             return true;
-        }catch(LdapContextException e){
-            logger.error("LDAP Service - Can't get 'DirContext'");
-            return false;
-        }catch(NamingException e){
-            logger.info("Couldn't close Ldap Context");
-            return true;
-        }catch(Exception e){
-            logger.error("ERROR: Unexpected error - Update process ended");
+            }catch(LdapContextException e){
+                logger.error("LDAP Service - Can't get 'DirContext'");
+                return false;
+            }catch(NamingException e){
+                logger.info("Couldn't close Ldap Context");
+                return true;
+            }catch(Exception e){
+                logger.error("Unexpected error - Update process ended");
+                return false;
+            }
+        }else{
             return false;
         }
+        
     }
     
     
@@ -149,7 +154,7 @@ public class ProcessServiceImpl implements ProcessService{
             if(response.getStatusCodeValue()==201){
                 return true;
             }else{
-                logger.error("ERROR: while sending data to GATA - Ticket#" + ticket.getId() + " - Arrover:'" + approver + "'");
+                logger.error("while sending data to GATA - Ticket#" + ticket.getId() + " - Arrover:'" + approver + "'");
                 return false;
             }
     }
@@ -162,7 +167,7 @@ public class ProcessServiceImpl implements ProcessService{
             c.add(Calendar.DATE, due);
             return sdf.format(c.getTime());
         } catch (ParseException ex) {
-            logger.error("ERROR: while seting up the DueDate");
+            logger.error("while seting up the DueDate");
             return "2099-12-01";
         }
     }
@@ -174,6 +179,10 @@ public class ProcessServiceImpl implements ProcessService{
         String content = 
                 "@cc_list=" + getActualCcList(ticket) + nl +
                 "@custom_" + config.getApproversField() + "=" + nl;
+        
+        if(ticket.getApprovalRequest().isEmpty() && !ticket.getValidationErrors().isEmpty()){
+            content = content + "@status=" + config.getApprovedState() + nl;
+        }
         
         if(!ticket.getApprovalRequest().isEmpty()){
             content = content +
@@ -196,7 +205,7 @@ public class ProcessServiceImpl implements ProcessService{
             inbox.Send(subject, content, emailTo, smtpSession);
             return true;
         } catch (KaceMailingException ex) {
-            logger.error("ERROR: while sending email to KACE - Ticket#" + ticket.getId());
+            logger.error("While sending email to KACE - [TICK:" + ticket.getId() + "]");
             return false;
         }
     }
@@ -225,18 +234,18 @@ public class ProcessServiceImpl implements ProcessService{
             approvalService.delete(Integer.parseInt(ticketNum), approver);
             map.put("status", "yes".equals(isApproved)?"Approved":"Rejected");
             map.put("Description", "The ticket#" + ticketNum + " was processed");            
-        }catch(KaceMailingException | NoApprovalRequestFoudException e){
+        }catch(KaceMailingException |NoApprovalRequestFoudException e ){
             map.put("status", "Error");
-            map.put("Description", "Ticket[" + ticketNum + "] Update Error: " + e.getMessage());
-        }
+            map.put("Description", e.getMessage() + " [TICK:" + ticketNum + " | APPROVER:'" + approver + "']");
+            logger.error("** Wile sending approval to Kace via mail [TICK:" + ticketNum + " | APPROVER:'" + approver + "']");
+        } 
         return map;
     }
     
     
     private void sendApprovalToKace(String isApproved, String ticketNum, String approver, String comment) throws KaceMailingException, NoApprovalRequestFoudException{
         
-            approvalService.exist(Integer.parseInt(ticketNum), approver);
-            
+        if(approvalService.exist(Integer.parseInt(ticketNum), approver)){
             String queueEmail = queueService.getEmail(Integer.parseInt(ticketNum));
             
             String approvalStatus = "yes".equals(isApproved)?"APPROVED":"REJECTED";
@@ -253,6 +262,13 @@ public class ProcessServiceImpl implements ProcessService{
                     "## KGI Messege: ..." + nl +
                     "## The user '" + approver + "' - " + approvalStatus + " - the request. " + nl + additionalCommnets;
             inbox.Send(subject, content, queueEmail, inbox.getSession());
+            logger.info("** The User: '" + approver + "' - " + approvalStatus + " the request for the TICK:" + ticketNum);
+        }else{
+            logger.error("** Request not found in local DB [TICK:" + ticketNum + " | APPROVER:'" + approver + "']");
+            throw new NoApprovalRequestFoudException("Approval Request not found");
+        }
+        
+            
             
         
         

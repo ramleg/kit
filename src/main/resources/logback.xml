@@ -2,7 +2,7 @@
 <configuration>
 
 	<!--<property name="DEV_HOME" value="c:/kgi-logs" />-->
-        <property name="DEV_HOME" value="/home/sysadmin/kgilogs" />
+        <property name="LOG_ROOT" value="/home/sysadmin/kgilogs" />
         
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -14,7 +14,7 @@
 
 	<appender name="FILE-AUDIT"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${DEV_HOME}/audit.log</file>
+		<file>${LOG_ROOT}/audit.log</file>
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<Pattern>
 				%d{yyyy-MM-dd HH:mm:ss} [%-5level] - %msg%n
@@ -23,7 +23,7 @@
 
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- rollover daily -->
-			<fileNamePattern>${DEV_HOME}/archived/audit.%d{yyyy-MM-dd}.%i.log
+			<fileNamePattern>${LOG_ROOT}/archived/audit.%d{yyyy-MM-dd}.%i.log
                         </fileNamePattern>
 			<timeBasedFileNamingAndTriggeringPolicy
 				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
@@ -36,7 +36,6 @@
 	<!-- Send logs to both console and file audit -->
         <logger name="com.globant.corp.kit" level="info" additivity="false">
 		<appender-ref ref="FILE-AUDIT" />
-                <appender-ref ref="STDOUT" />
 	</logger>
 
 	<root level="info">

@@ -19,7 +19,7 @@ import java.util.HashMap;
 import com.globant.corp.kit.service.RestServiceConsumer;
 import com.globant.corp.kit.service.TicketService;
 import com.globant.corp.kit.service.TicketStatusService;
-import com.globant.corp.kit.util.LogbackDemo;
+import com.globant.corp.kit.util.LogReader;
 import java.text.ParseException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -57,12 +57,6 @@ public class KitApplicationTests {
     @Test
     public void contextLoads() throws ParseException {
 //        prs.updateGata();
-//        for(Integer i : queueService.getQueuesIds()){
-//            System.out.println("Queue ID: " + i);
-//        }
-
-        LogbackDemo log = new LogbackDemo();
-        log.performTask();
     }
 
 
