@@ -21,7 +21,7 @@ public class ApprovalRequest {
     private Integer id;
     @Column(name="ticket_num")
     private Integer ticketNum;
-    private String approver;
+    private String approver = "";
 
     public ApprovalRequest() {
     }
@@ -29,8 +29,7 @@ public class ApprovalRequest {
     public ApprovalRequest(Integer ticketNum, String approver) {
         this.ticketNum = ticketNum;
         this.approver = approver;
-    }
-    
+    }    
     public Integer getId() {
         return id;
     }

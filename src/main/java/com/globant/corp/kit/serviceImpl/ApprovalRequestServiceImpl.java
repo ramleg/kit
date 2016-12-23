@@ -19,6 +19,15 @@ public class ApprovalRequestServiceImpl implements ApprovalRequestService{
     ApprovalRequestRepo repo;
     
     @Override
+    public ApprovalRequest getById(Integer id) throws NoApprovalRequestFoudException{
+        ApprovalRequest request = repo.findById(id);
+        if (request == null){
+            throw new NoApprovalRequestFoudException("Approval Request not found");
+        }
+        return request;
+    }
+    
+    @Override
     public List<ApprovalRequest> getByTicketNum(Integer num) {
         return repo.findByTicketNum(num);
     }
@@ -44,10 +53,12 @@ public class ApprovalRequestServiceImpl implements ApprovalRequestService{
     }
 
     @Override
-    public void delete(Integer ticketNum, String approver) {
-        ApprovalRequest reg = repo.findByTicketNumAndApprover(ticketNum, approver);
+    public void delete(Integer id) {
+        ApprovalRequest reg = repo.findById(id);
         if(reg != null)repo.delete(reg);
     }
+
+    
 
     
     

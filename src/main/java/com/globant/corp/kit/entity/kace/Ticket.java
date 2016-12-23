@@ -1,5 +1,6 @@
 package com.globant.corp.kit.entity.kace;
 
+import com.globant.corp.kit.entity.local.ApprovalRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,7 +50,7 @@ public class Ticket {
     @Transient
     private boolean allowClean = false;
     @Transient
-    private List<String> approvalRequest = new ArrayList<>();
+    private List<ApprovalRequest> approvalRequest = new ArrayList<>();
     @Transient
     private List<String> validationErrors = new ArrayList<>();
     @Transient
@@ -155,15 +156,15 @@ public class Ticket {
         this.allowClean = allowClean;
     }
 
-    public List<String> getApprovalRequest() {
+    public List<ApprovalRequest> getApprovalRequest() {
         return approvalRequest;
     }
 
-    public void setApprovalRequest(List<String> approvalRequest) {
+    public void setApprovalRequest(List<ApprovalRequest> approvalRequest) {
         this.approvalRequest = approvalRequest;
     }
 
-    public void addApprovalRequest(String request) {
+    public void addApprovalRequest(ApprovalRequest request) {
         this.approvalRequest.add(request);
     }
     

@@ -11,9 +11,10 @@ import java.util.List;
  */
 
 public interface ApprovalRequestService {
+    public ApprovalRequest getById(Integer id) throws NoApprovalRequestFoudException;
     public List<ApprovalRequest> getByTicketNum(Integer num);
     public ApprovalRequest getByTicketNumAndApprover(Integer num, String approver);
     public boolean exist(Integer ticketNum, String approver);
     public void save(Integer ticketNum, String approver);
-    public void delete(Integer ticketNum, String approver);
+    public void delete(Integer id);
 }

@@ -1,5 +1,11 @@
 package com.globant.corp.kit;
 
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.rolling.RollingFileAppender;
+import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 import com.globant.corp.kit.entity.kace.Ticket;
 import com.globant.corp.kit.entity.local.ApprovalRequest;
 import com.globant.corp.kit.repo.kace.TicketRepo;
@@ -7,7 +13,6 @@ import com.globant.corp.kit.repo.local.ApprovalRequestRepo;
 import com.globant.corp.kit.service.ApprovalRequestService;
 import com.globant.corp.kit.service.InboxService;
 import com.globant.corp.kit.service.LdapService;
-import com.globant.corp.kit.service.ProcessService;
 import com.globant.corp.kit.service.QueueService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +26,9 @@ import com.globant.corp.kit.service.TicketService;
 import com.globant.corp.kit.service.TicketStatusService;
 import com.globant.corp.kit.util.LogReader;
 import java.text.ParseException;
+import com.globant.corp.kit.service.KGIService;
+import java.util.Iterator;
+import org.slf4j.LoggerFactory;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = KitApplication.class)
@@ -40,7 +48,7 @@ public class KitApplicationTests {
     InboxService inbox;
     
     @Autowired
-    ProcessService prs;
+    KGIService kgi;
     
     @Autowired
     TicketStatusService tss;
@@ -56,7 +64,8 @@ public class KitApplicationTests {
 
     @Test
     public void contextLoads() throws ParseException {
-//        prs.updateGata();
+               
+        kgi.update();
     }
 
 

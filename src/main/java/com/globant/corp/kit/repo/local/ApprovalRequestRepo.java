@@ -11,6 +11,7 @@ import org.springframework.data.repository.CrudRepository;
  */
 
 public interface ApprovalRequestRepo extends CrudRepository<ApprovalRequest, Integer>{
+    public ApprovalRequest findById(Integer id);
     public List<ApprovalRequest> findByTicketNum(Integer num);
     public ApprovalRequest findByTicketNumAndApprover(Integer num, String approver);
 }
