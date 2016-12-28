@@ -109,10 +109,10 @@ public class KGIServiceImpl implements KGIService{
                         for(ApprovalRequest request: approvalRequest){
                             // post to gata
                             if(postToGATA(ticket, request)){
-                                logger.info("GATA received the request: [ID#" + request.getId() + " TICK:" + request.getTicketNum()+ " | APPROVER:'" + request.getApprover() + "']");
+                                logger.info("GATA received the request: [TICK:" + request.getTicketNum()+ " | APPROVER:'" + request.getApprover() + "']");
                                 // guarda en local DB el request
                                 approvalService.save(request.getTicketNum(), request.getApprover());
-                                logger.info("Request saved in local DB: [ID#" + request.getId() + " TICK:" + request.getTicketNum()+ " | APPROVER:'" + request.getApprover() + "']");
+                                logger.info("Request saved in local DB: [TICK:" + request.getTicketNum()+ " | APPROVER:'" + request.getApprover() + "']");
                             }
                         }
                     }
@@ -227,7 +227,7 @@ public class KGIServiceImpl implements KGIService{
     }
     
     @Override
-    public HashMap<String,String> kgiEndPoint(String isApproved, String requestID, String token, String comment) {
+    public HashMap<String,String> kgiEndPoint(String isApproved, String requestID, String comment, String token) {
         
         // send email to kace to update the ticket
         HashMap<String,String> map = new HashMap<>();

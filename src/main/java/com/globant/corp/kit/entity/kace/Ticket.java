@@ -46,7 +46,10 @@ public class Ticket {
     private String approvers;
     @Column(name="HD_STATUS_ID")
     private Integer status;
-
+    @Column(name="CUSTOM_FIELD_VALUE1")
+    private String project;
+    
+    
     @Transient
     private boolean allowClean = false;
     @Transient
@@ -122,6 +125,14 @@ public class Ticket {
         this.status = status;
     }
 
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
+    }
+
     public String getApprovers() {
         return approvers;
     }
@@ -195,8 +206,5 @@ public class Ticket {
     public void setDetails(List<TicketDetails> details) {
         this.details = details;
     }
-
-    
-    
     
 }

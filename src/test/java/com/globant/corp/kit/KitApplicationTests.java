@@ -65,7 +65,7 @@ public class KitApplicationTests {
     @Test
     public void contextLoads() throws ParseException {
                
-        kgi.update();
+//        kgi.update();
     }
 
 

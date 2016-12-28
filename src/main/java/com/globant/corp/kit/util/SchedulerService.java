@@ -21,7 +21,7 @@ public class SchedulerService {
     
     @Scheduled(fixedDelay = 120000)
     public void systemUpdate(){
-        //kgi.update();
+        kgi.update();
     }
     
 }
