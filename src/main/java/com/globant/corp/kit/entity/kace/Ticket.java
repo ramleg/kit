@@ -49,6 +49,13 @@ public class Ticket {
     @Column(name="CUSTOM_FIELD_VALUE1")
     private String project;
     
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "HD_CATEGORY_ID")
+    private Category category;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "HD_PRIORITY_ID")
+    private Priority priority;
     
     @Transient
     private boolean allowClean = false;
@@ -206,5 +213,22 @@ public class Ticket {
     public void setDetails(List<TicketDetails> details) {
         this.details = details;
     }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
+    
     
 }

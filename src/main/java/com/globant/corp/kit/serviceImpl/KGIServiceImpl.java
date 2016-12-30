@@ -145,7 +145,7 @@ public class KGIServiceImpl implements KGIService{
             body.put("dueDate",dueDate(30));
             body.put("approvalRequestTypeId", "34");
             body.put("approver", request.getApprover());
-            body.put("body", "<html><body>bodyyyy</body></html>");
+            body.put("body", "<html><body>" + gataHtmlBody(ticket) + "</body></html>");
             body.put("author", ticket.getSubmitter().getUserName());
             body.put("description", ticket.getSummary());
             body.put("language", "english");
@@ -268,4 +268,57 @@ public class KGIServiceImpl implements KGIService{
             inbox.Send(subject, content, queueEmail, inbox.getSession());
             logger.info("<-- The User: '" + approver + "' - " + approvalStatus + " the request for the TICK:" + ticketNum);
     }
+    
+    
+    private String gataHtmlBody(Ticket ticket){
+        
+        return "<div style=\"max-width: 100%;max-height:100%;padding: 7px 7px;\">\n" +
+                "    <div style=\"line-height: 30px; min-height: 190px;padding: 14px; font-family: lucida, sans-serif;\">\n" +
+                "        <div style=\"text-align: right;font-size: 14px;color: #979797;\">\n" +
+                "            TKT\n" +
+                "            <span style=\"font-family: lucida, sans-serif;color: #464646;\">\n" +
+                ticket.getId() +
+                "            </span>\n" +
+                "        </div>\n" +
+                "        <div style=\"font-family: lucida, sans-serif;text-align: left;width: 100%;margin: 7px 0 5px 0;font-size: 14px;color: #979797;\">\n" +
+                "            TITLE\n" +
+                "        </div>\n" +
+                "        <div style=\"width: 100%;font-size: 14px;color: #464646;margin-bottom: 5px;\">\n" +
+                ticket.getTitle() +
+                "        </div>\n" +
+                "        <hr style=\"border: none;border-top: 2px dashed #f1f1f1;width: 100%;margin: 0;padding-top: 0px;\">\n" +
+                "            <div style=\"font-family: lucida,sans-serif;width: 100%;margin: 7px 0px 7px 0px;color: #464646;font-size: 14px;color: #979797;\">\n" +
+                "                CATEGORY\n" +
+                "            </div>\n" +
+                "            <div style=\"color: #464646;font-size: 14px;\">\n" +
+                ticket.getCategory() +
+                "            </div>\n" +
+                "        \n" +
+                "        <hr style=\"border: none;border-top: 2px dashed #f1f1f1;width: 100%;margin: 0;padding-top: 0px;\">\n" +
+                "        	<div style=\"font-family: lucida,sans-serif;width: 100%;margin: 7px 0px 7px 0px;color: #464646;font-size: 14px;color: #979797;\">\n" +
+                "                PRIORITY\n" +
+                "            </div>\n" +
+                "            <div style=\"color: #fff;font-size: 14px;font-weight:bold;\">\n" +
+                ticket.getPriority() +
+                "            </div>\n" +
+                "        \n" +
+                "        <hr style=\"border: none;border-top: 2px dashed #f1f1f1;width: 100%;margin: 0;padding-top: 0px;\">\n" +
+                "			<div style=\"font-family: lucida,sans-serif;width: 100%;margin: 7px 0px 7px 0px;color: #464646;font-size: 14px;color: #979797;\">\n" +
+                "                PROJECT\n" +
+                "            </div>\n" +
+                "            <div style=\"width: 100%;font-size: 14px;color: #464646;margin-bottom: 5px;\">\n" +
+                ticket.getProject() +
+                "        	</div>\n" +
+                "        <hr style=\"border: none;border-top: 2px dashed #f1f1f1;width: 100%;margin: 0;padding-top: 0px;\">\n" +
+                "			<div style=\"font-family: lucida,sans-serif;width: 100%;margin: 7px 0px 7px 0px;color: #464646;font-size: 14px;color: #979797;\">\n" +
+                "                SUMMARY\n" +
+                "            </div>\n" +
+                "            <div style=\"width: 100%;font-size: 14px;color: #464646;margin-bottom: 5px;\">\n" +
+                ticket.getSummary() +
+                "        	</div>\n" +
+                "    </div>\n" +
+                "</div>";
+        
+    }
+    
 }

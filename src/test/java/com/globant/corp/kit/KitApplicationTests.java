@@ -6,8 +6,12 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
+import com.globant.corp.kit.entity.kace.Category;
+import com.globant.corp.kit.entity.kace.Priority;
 import com.globant.corp.kit.entity.kace.Ticket;
 import com.globant.corp.kit.entity.local.ApprovalRequest;
+import com.globant.corp.kit.repo.kace.CategoryRepo;
+import com.globant.corp.kit.repo.kace.PriorityRepo;
 import com.globant.corp.kit.repo.kace.TicketRepo;
 import com.globant.corp.kit.repo.local.ApprovalRequestRepo;
 import com.globant.corp.kit.service.ApprovalRequestService;
@@ -62,9 +66,15 @@ public class KitApplicationTests {
     @Autowired
     QueueService queueService;
 
+    @Autowired
+    CategoryRepo categoryRepo;
+    
+    @Autowired
+    PriorityRepo priorityRepo;
+    
     @Test
     public void contextLoads() throws ParseException {
-               
+        
 //        kgi.update();
     }
 
